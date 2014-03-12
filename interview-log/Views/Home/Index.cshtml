@@ -5,18 +5,11 @@
 <div class="jumbotron">
     <h1>Interview log</h1>
     <p class="lead">Interview log is the place where you can manage interviews.</p>
-    <p><a href="~/Account/Login" class="btn btn-primary btn-large">Sign in now! &raquo;</a></p>
+    <p><section id="socialLoginForm">
+@if (!Request.IsAuthenticated)
+{
+    @Html.Partial("_ExternalLoginsListPartial", new { Action = "ExternalLogin", ReturnUrl = ViewBag.ReturnUrl })
+}
+</section></p>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Candidates list</h2>
-        <p>
-            Where is a wonderful list of candidates
-        </p>
-    </div>
-    <div class="col-md-4">
-        <h2>Features</h2>
-        <p>And many features will be implemented soon</p>
-    </div>
-</div>

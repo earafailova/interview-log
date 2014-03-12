@@ -23,9 +23,12 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Candidates", "../Users")</li>
                 </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+               
+                    @Html.Partial("_LoginPartial", new { Action = "Login", ReturnUrl = ViewBag.ReturnUrl })
+               
+             </div>
         </div>
+  
     </div>
     <div class="container body-content">
         @RenderBody()

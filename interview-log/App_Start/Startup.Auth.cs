@@ -2,6 +2,7 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using Owin.Security.GooglePlus;
 
 namespace interview_log
 {
@@ -32,7 +33,8 @@ namespace interview_log
             //   appId: "",
             //   appSecret: "");
 
-            app.UseGoogleAuthentication();
+            //app.UseGoogleAuthentication();
+            app.UseGooglePlusAuthentication("904247126982.apps.googleusercontent.com", "6_uJd_KuIZ7o06YS42gc2jId");
         }
     }
 }
