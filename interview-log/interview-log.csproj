@@ -54,6 +54,9 @@
     <Reference Include="Owin.Security.GooglePlus">
       <HintPath>..\packages\Owin.Security.GooglePlus.1.0.0\lib\net45\Owin.Security.GooglePlus.dll</HintPath>
     </Reference>
+    <Reference Include="RouteDebugger">
+      <HintPath>..\packages\routedebugger.2.1.4.0\lib\net40\RouteDebugger.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -169,6 +172,19 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201403120335108_InitialCreate.cs" />
+    <Compile Include="Migrations\201403120335108_InitialCreate.Designer.cs">
+      <DependentUpon>201403120335108_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201403131009481_PersonalData.cs" />
+    <Compile Include="Migrations\201403131009481_PersonalData.Designer.cs">
+      <DependentUpon>201403131009481_PersonalData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201403131027571_PersonalData1.cs" />
+    <Compile Include="Migrations\201403131027571_PersonalData1.Designer.cs">
+      <DependentUpon>201403131027571_PersonalData1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Calendar.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -226,10 +242,10 @@
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Home\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Calendar.cshtml" />
+    <Content Include="Views\Calendar\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Calendar\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -237,6 +253,17 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201403120335108_InitialCreate.resx">
+      <DependentUpon>201403120335108_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201403131009481_PersonalData.resx">
+      <DependentUpon>201403131009481_PersonalData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201403131027571_PersonalData1.resx">
+      <DependentUpon>201403131027571_PersonalData1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -13,11 +13,17 @@ namespace interview_log
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapRoute("GoogleLogin",
+                 "login",
+                 new { controller = "Account", action = "GoogleLogin" });
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            
         }
     }
 }

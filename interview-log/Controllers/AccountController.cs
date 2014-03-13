@@ -14,7 +14,8 @@ namespace interview_log.Controllers
 {
     [Authorize]
     public class AccountController : Controller
-    {
+ {
+       public User currentUser{get; set;}
         public AccountController()
             : this(new UserManager<User>(new UserStore<User>(new ApplicationDbContext())))
         {
@@ -191,12 +192,21 @@ namespace interview_log.Controllers
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
+       
+        public ActionResult GoogleLogin()
+        {
+            // Request a redirect to the external login provider
+            return new ChallengeResult("GooglePlus", Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = "http://localhost:49874/" }));
+        }
+
         //
         // GET: /Account/ExternalLoginCallback
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
+            
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            
             if (loginInfo == null)
             {
                 return RedirectToAction("Login");
@@ -212,9 +222,12 @@ namespace interview_log.Controllers
             else
             {
                 // If the user does not have an account, then prompt the user to create an account
+                var externalIdentity = HttpContext.GetOwinContext().Authentication.GetExternalIdentityAsync(DefaultAuthenticationTypes.ExternalCookie);
+                var emailClaim = externalIdentity.Result.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+                var email = emailClaim.Value;
                 ViewBag.ReturnUrl = returnUrl;
                 ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { UserName = loginInfo.DefaultUserName });
+                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { UserName = loginInfo.DefaultUserName, Email = email });
             }
         }
 
@@ -265,14 +278,14 @@ namespace interview_log.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new User() { UserName = model.UserName };
-                var result = await UserManager.CreateAsync(user);
+                currentUser = new User() { UserName = model.UserName, Email = model.Email };
+                var result = await UserManager.CreateAsync(currentUser);
                 if (result.Succeeded)
                 {
-                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                    result = await UserManager.AddLoginAsync(currentUser.Id, info.Login);
                     if (result.Succeeded)
                     {
-                        await SignInAsync(user, isPersistent: false);
+                        await SignInAsync(currentUser, isPersistent: false);
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -292,6 +305,8 @@ namespace interview_log.Controllers
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
+
+        
 
         //
         // GET: /Account/ExternalLoginFailure

@@ -20,11 +20,14 @@
                 @Html.ActionLink("Interview log", "Index", "Home", null, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Candidates", "../Users")</li>
-                </ul>
-               
-                    @Html.Partial("_LoginPartial", new { Action = "Login", ReturnUrl = ViewBag.ReturnUrl })
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        @if (Request.IsAuthenticated)
+                        {
+                            @Html.Partial("_LoginPartial", new { Action = "LogOff", ReturnUrl = ViewBag.ReturnUrl })
+                        }
+                </li>
+            </ul>
                
              </div>
         </div>

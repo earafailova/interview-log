@@ -34,7 +34,12 @@ namespace interview_log
             //   appSecret: "");
 
             //app.UseGoogleAuthentication();
-            app.UseGooglePlusAuthentication("904247126982.apps.googleusercontent.com", "6_uJd_KuIZ7o06YS42gc2jId");
+            var options = new GooglePlusAuthenticationOptions() {
+                ClientId = "904247126982.apps.googleusercontent.com",
+                ClientSecret = "6_uJd_KuIZ7o06YS42gc2jId",
+           };
+            options.Scope.Add("email");
+            app.UseGooglePlusAuthentication(options);
         }
     }
 }
