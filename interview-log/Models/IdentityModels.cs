@@ -13,6 +13,8 @@ namespace interview_log.Models
         public string Position { get; set; }
         public byte State { get; set; }
         public bool Admin { get; set; }
+        public bool Interviewer { get; set; }
+        
 
     }
 

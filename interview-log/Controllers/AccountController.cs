@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using interview_log.Models;
+using System.Web.Security;
 
 namespace interview_log.Controllers
 {
@@ -16,9 +17,11 @@ namespace interview_log.Controllers
     public class AccountController : Controller
  {
        public User currentUser{get; set;}
+       private ApplicationDbContext db = new ApplicationDbContext();
         public AccountController()
             : this(new UserManager<User>(new UserStore<User>(new ApplicationDbContext())))
         {
+          
         }
 
         public AccountController(UserManager<User> userManager)
@@ -213,10 +216,10 @@ namespace interview_log.Controllers
             }
 
             // Sign in the user with this external login provider if the user already has a login
-            var user = await UserManager.FindAsync(loginInfo.Login);
-            if (user != null)
+            currentUser = await UserManager.FindAsync(loginInfo.Login);
+            if (currentUser != null)
             {
-                await SignInAsync(user, isPersistent: false);
+                await SignInAsync(currentUser, isPersistent: false);
                 return RedirectToLocal(returnUrl);
             }
             else
@@ -227,6 +230,7 @@ namespace interview_log.Controllers
                 var email = emailClaim.Value;
                 ViewBag.ReturnUrl = returnUrl;
                 ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+                ViewBag.Email = email;
                 return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { UserName = loginInfo.DefaultUserName, Email = email });
             }
         }
@@ -239,6 +243,13 @@ namespace interview_log.Controllers
         {
             // Request a redirect to the external login provider to link a login for the current user
             return new ChallengeResult(provider, Url.Action("LinkLoginCallback", "Account"), User.Identity.GetUserId());
+        }
+
+        public string GetEmail()
+        {
+            string userId = (string)User.Identity.GetUserId();
+            currentUser = db.Users.Find(userId);
+            return currentUser.Email; 
         }
 
         //
