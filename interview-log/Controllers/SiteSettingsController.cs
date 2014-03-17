@@ -7,19 +7,15 @@ using interview_log.Models;
 
 namespace interview_log.Controllers
 {
-    public class CalendarController : Controller
+    public class SiteSettingsController : Controller
     {
         private Calendar CurrentCalendar;
 
         public ActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult ChangeCalendarAdrdess(string newAddress)
-        {
-            CurrentCalendar.CalendarAddress = newAddress;
-            return View();
+            CurrentCalendar = CurrentCalendar == null ? new Calendar() : CurrentCalendar;
+            return View(CurrentCalendar);
+           
         }
 	}
 }
