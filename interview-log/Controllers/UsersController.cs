@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using interview_log.Models;
 using System.Web.Security;
 using Microsoft.AspNet.Identity;
+using System.IO;
 namespace interview_log.Controllers
 {
     public class UsersController : Controller
@@ -36,6 +37,20 @@ namespace interview_log.Controllers
             db.SaveChanges();
          
             return View(user);
+        }
+
+        [HttpPost]
+        public ActionResult Details(HttpPostedFileBase file)
+        {
+
+            if (file.ContentLength > 0)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName); // TODO:: create user-specific folders fo file storage! --akhramov
+                file.SaveAs(path);
+            }
+
+            return RedirectToAction("Details");
         }
 
         // GET: /Users/Edit/5
@@ -107,5 +122,6 @@ namespace interview_log.Controllers
             }
             base.Dispose(disposing);
         }
+
     }
 }
