@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using interview_log.Models;
-using System.Web.Security;
 using Microsoft.AspNet.Identity;
 using System.IO;
+using System.Collections.Generic;
+
 namespace interview_log.Controllers
 {
     public class UsersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+        private static string images = "~/uploads/images/";
+        private static string files = "~/uploads/files";
         // GET: /Users/
         public ActionResult Index()
         {
@@ -26,30 +25,21 @@ namespace interview_log.Controllers
         public ActionResult Details(string id)
         {
             string userId = id == null ? User.Identity.GetUserId() : id;
-            bool ok = User.IsInRole("Administrator");
-            
             User user = db.Users.Find(userId);
+            
             if (user == null)
-            {
                 return HttpNotFound();
-            }
-            user.Admin = true;
-            db.SaveChanges();
-         
+
+            ViewBag.Images = Helpers.FilesHelper.GetImages(userId);
             return View(user);
         }
 
         [HttpPost]
         public ActionResult Details(HttpPostedFileBase file)
         {
-
-            if (file.ContentLength > 0)
-            {
-                var fileName = Path.GetFileName(file.FileName);
-                var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName); // TODO:: create user-specific folders fo file storage! --akhramov
-                file.SaveAs(path);
-            }
-
+            string userId = User.Identity.GetUserId();
+            string directoryPath = Server.MapPath(images + userId);
+            Helpers.FilesHelper.UploadFile(ref file, userId);
             return RedirectToAction("Details");
         }
 
