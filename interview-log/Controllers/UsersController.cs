@@ -31,6 +31,7 @@ namespace interview_log.Controllers
                 return HttpNotFound();
 
             ViewBag.Images = Helpers.FilesHelper.GetImages(userId);
+            ViewBag.FileInfos = Helpers.FilesHelper.GetFileInfos(userId);
             return View(user);
         }
 

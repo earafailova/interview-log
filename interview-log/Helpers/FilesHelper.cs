@@ -7,6 +7,17 @@ using System.Web;
 
 namespace interview_log.Helpers
 {
+    public struct MyFileInfo
+    {
+        public string Name { get; set; }
+        public string Size { get; set; }
+        public MyFileInfo(FileInfo fileInfo) : this()
+        {
+            Name = fileInfo.Name;
+            Size = FilesHelper.BytesToString(fileInfo.Length);
+        }
+    }
+
     /// <summary>
     /// A helper to encapsulate the work with files. We do not need to have separate instance of it
     /// because controllers created for each request.
@@ -27,8 +38,8 @@ namespace interview_log.Helpers
             if (file.ContentLength > 0)
             {
                 directoryPath = GetPath(
-                    folder: (IsImage(file.ContentType) ? imageFolder : fileFolder),
-                    userId: userId
+                    (IsImage(file.ContentType) ? imageFolder : fileFolder),
+                    userId
                     );
                 if (!Directory.Exists(directoryPath))
                 {
@@ -42,15 +53,19 @@ namespace interview_log.Helpers
 
         internal static IEnumerable<string> GetImages(string userId)
         {
-            IEnumerable<string> result = GetItems(userId, "~/uploads/images");
-            return result;                  
+            IEnumerable<string> result = GetItems(userId, imageFolder);
+            return result;                 
         }
         
-        internal static IEnumerable<string> GetFiles(string userId)
+        internal static IEnumerable<MyFileInfo> GetFileInfos(string userId)
         {
-            string directoryPath = GetPath(fileFolder, userId);
-            IEnumerable<string> result = GetItems(userId, directoryPath);
-            return result;
+            IEnumerable<string> result = GetItems(userId, fileFolder);
+            return result.Select(file => 
+            {
+                FileInfo fileInfo = new FileInfo(GetPath(fileFolder, userId, file));
+                return new MyFileInfo(fileInfo);
+            }
+            ); 
         } 
 
         private static bool IsImage(string MIMEType)
@@ -59,9 +74,9 @@ namespace interview_log.Helpers
             return image.IsMatch(MIMEType);
         }
 
-        private static string GetPath(string folder, string userId)
+        private static string GetPath(params string[] path)
         {
-            return HttpContext.Current.Server.MapPath(Path.Combine(folder, userId));
+            return HttpContext.Current.Server.MapPath(Path.Combine(path));
         }
 
         private static IEnumerable<string> GetItems(string userId, string folder)
@@ -69,7 +84,19 @@ namespace interview_log.Helpers
             string directoryPath = GetPath(folder, userId);
             return Directory.Exists(directoryPath) ?
                 Directory.GetFiles(directoryPath)
-                .Select(path => userId + "/" + Path.GetFileName(path)) : new List<string>();
+                .Select(path =>  Path.GetFileName(path)) : new List<string>();
         }
+
+        internal static string BytesToString(long byteCount)
+        {
+            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
+            if (byteCount == 0)
+                return "0" + suf[0];
+            long bytes = Math.Abs(byteCount);
+            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
+            return (Math.Sign(byteCount) * num).ToString() + suf[place];
+        }
+
     }
 }
