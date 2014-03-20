@@ -13,8 +13,6 @@ namespace interview_log.Controllers
     public class UsersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        private static string images = "~/uploads/images/";
-        private static string files = "~/uploads/files";
         // GET: /Users/
         public ActionResult Index()
         {
@@ -39,7 +37,8 @@ namespace interview_log.Controllers
         public ActionResult Details(HttpPostedFileBase file)
         {
             string userId = User.Identity.GetUserId();
-            string directoryPath = Server.MapPath(images + userId);
+            User user = db.Users.Find(userId);
+            user.Attachments.Add(new Attachment(ref file, userId));
             Helpers.FilesHelper.UploadFile(ref file, userId);
             return RedirectToAction("Details");
         }

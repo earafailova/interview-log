@@ -194,6 +194,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CalendarModel.cs" />
+    <Compile Include="Models\AttachmentModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\TagModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
