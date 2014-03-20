@@ -10,7 +10,6 @@ namespace interview_log.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "interview_log.Models.ApplicationDbContext";
         }
 
         protected override void Seed(interview_log.Models.ApplicationDbContext context)

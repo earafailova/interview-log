@@ -1,5 +1,4 @@
 ﻿@model interview_log.Models.User
-@using interview_log.Helpers
 @{
     ViewBag.Title = "Details";
 }
@@ -51,19 +50,20 @@
 </script>
 
 <h3>Images:</h3>
-@foreach (string item in ViewBag.Images)
+@foreach (var item in ViewBag.Images)
 {
-    <a href="javascript:showCloseLevel('@item 2', '@item')"><img src="~/uploads/images/@Model.Id/@item" width="100" id="@item" title="click to enlarge" /></a>
-    <a href="javascript:showCloseLevel('@item', '@item 2')"><img src="~/uploads/images/@Model.Id/@item" width="500" id="@item 2" style="display:none" title="click to make it small again" /></a>
+    <a href="javascript:showCloseLevel('@item.Id 2', '@item.Id')"><img src="~/uploads/images/@Model.Id/@item.Name" width="100" id="@item" title="click to enlarge" /></a>
+    <a href="javascript:showCloseLevel('@item.Id', '@item.Id 2')"><img src="~/uploads/images/@Model.Id/@item.Name" width="500" id="@item 2" style="display:none" title="click to make it small again" /></a>
 }
 <h3>files:</h3>
 <div class="row">
-    @foreach (MyFileInfo file in ViewBag.FileInfos)
+    @foreach (var file in ViewBag.Files)
     {
         <div class="col-md-4">
             <p>
                 @file.Name <br />
                 @file.Size <br />
+                <a href="DeleteAttachment/@file.Id">delete!</a>
             </p> 
             <p><a class="btn btn-danger"href="~/uploads/files/@Model.Id/@file.Name">Get it! &raquo;</a></p>
         </div>

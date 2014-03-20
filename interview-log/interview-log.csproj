@@ -174,22 +174,17 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\FilesHelper.cs" />
-    <Compile Include="Migrations\201403120335108_InitialCreate.cs" />
-    <Compile Include="Migrations\201403120335108_InitialCreate.Designer.cs">
-      <DependentUpon>201403120335108_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201403201146404_init.cs" />
+    <Compile Include="Migrations\201403201146404_init.Designer.cs">
+      <DependentUpon>201403201146404_init.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201403131009481_PersonalData.cs" />
-    <Compile Include="Migrations\201403131009481_PersonalData.Designer.cs">
-      <DependentUpon>201403131009481_PersonalData.cs</DependentUpon>
+    <Compile Include="Migrations\201403201215313_blah blah.cs" />
+    <Compile Include="Migrations\201403201215313_blah blah.Designer.cs">
+      <DependentUpon>201403201215313_blah blah.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201403131027571_PersonalData1.cs" />
-    <Compile Include="Migrations\201403131027571_PersonalData1.Designer.cs">
-      <DependentUpon>201403131027571_PersonalData1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201403150903085_New Role added.cs" />
-    <Compile Include="Migrations\201403150903085_New Role added.Designer.cs">
-      <DependentUpon>201403150903085_New Role added.cs</DependentUpon>
+    <Compile Include="Migrations\201403201235061_blah blah blah.cs" />
+    <Compile Include="Migrations\201403201235061_blah blah blah.Designer.cs">
+      <DependentUpon>201403201235061_blah blah blah.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -271,17 +266,14 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201403120335108_InitialCreate.resx">
-      <DependentUpon>201403120335108_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201403201146404_init.resx">
+      <DependentUpon>201403201146404_init.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201403131009481_PersonalData.resx">
-      <DependentUpon>201403131009481_PersonalData.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201403201215313_blah blah.resx">
+      <DependentUpon>201403201215313_blah blah.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201403131027571_PersonalData1.resx">
-      <DependentUpon>201403131027571_PersonalData1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201403150903085_New Role added.resx">
-      <DependentUpon>201403150903085_New Role added.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201403201235061_blah blah blah.resx">
+      <DependentUpon>201403201235061_blah blah blah.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

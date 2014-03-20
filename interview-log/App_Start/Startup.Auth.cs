@@ -33,13 +33,26 @@ namespace interview_log
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication();
-            var options = new GooglePlusAuthenticationOptions() {
-                ClientId = "904247126982.apps.googleusercontent.com",
-                ClientSecret = "6_uJd_KuIZ7o06YS42gc2jId",
-           };
-            options.Scope.Add("email");
-            app.UseGooglePlusAuthentication(options);
+            app.UseGoogleAuthentication();
+            //var options = new GooglePlusAuthenticationOptions()
+            //{
+            //    ClientId = "904247126982.apps.googleusercontent.com",
+            //    ClientSecret = "6_uJd_KuIZ7o06YS42gc2jId",
+            //};
+            //options.Scope.Add("email");
+            ////options.SignInAsAuthenticationType = "offline";
+            //options.Provider = new GooglePlusAuthenticationProvider()
+            //{
+            //    OnAuthenticated = async context =>
+            //    {
+
+            //        context.Identity.AddClaim(
+            //       new System.Security.Claims.Claim("GooglePlusAccessToken",
+            //                                context.AccessToken));
+
+            //    }
+            //};
+            //app.UseGooglePlusAuthentication(options);
         }
     }
 }

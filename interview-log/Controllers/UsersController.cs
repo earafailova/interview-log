@@ -7,6 +7,10 @@ using interview_log.Models;
 using Microsoft.AspNet.Identity;
 using System.IO;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
+using Antlr.Runtime.Misc;
+
 
 namespace interview_log.Controllers
 {
@@ -18,18 +22,18 @@ namespace interview_log.Controllers
         {
             return View(db.Users.ToList());
         }
-
         // GET: /Users/Details/5
         public ActionResult Details(string id)
         {
             string userId = id == null ? User.Identity.GetUserId() : id;
             User user = db.Users.Find(userId);
-            
+
             if (user == null)
                 return HttpNotFound();
 
-            ViewBag.Images = Helpers.FilesHelper.GetImages(userId);
-            ViewBag.FileInfos = Helpers.FilesHelper.GetFileInfos(userId);
+
+            ViewBag.Images = user.Attachments.Where(item => item.Type == Type.Image);
+            ViewBag.Files = user.Attachments.Where(item => item.Type == Type.File);
             return View(user);
         }
 
@@ -38,8 +42,22 @@ namespace interview_log.Controllers
         {
             string userId = User.Identity.GetUserId();
             User user = db.Users.Find(userId);
-            user.Attachments.Add(new Attachment(ref file, userId));
-            Helpers.FilesHelper.UploadFile(ref file, userId);
+            Attachment attachment = new Attachment(ref file, userId);
+            user.Attachments.Add(attachment);
+            db.SaveChanges(); 
+            return RedirectToAction("Details");
+        }
+
+        public ActionResult DeleteAttachment(System.Guid Id)
+        {
+            string userId = User.Identity.GetUserId();
+            User user = db.Users.Find(userId);
+
+            if (user == null)
+                return HttpNotFound();
+            Attachment toDelete = user.Attachments.First(item => item.Id == Id);
+            user.Attachments.Remove(toDelete);
+            db.SaveChanges();
             return RedirectToAction("Details");
         }
 

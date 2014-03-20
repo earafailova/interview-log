@@ -16,7 +16,6 @@ namespace interview_log.Models
         {
             Attachments = new HashSet<Attachment>();
         }
-
         public string Email {get; set;}
         public string Position { get; set; }
         public byte State { get; set; }
