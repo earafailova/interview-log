@@ -13,97 +13,95 @@ using Google.Apis.Auth.OAuth2.Mvc;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using System.Threading;
-//using Google.Apis.Interview_log;
+using Google.Apis.Interview_log;
 using MvcFlashMessages;
 using Google.Apis.Calendar.v3.Data;
-//using Enums;
+using interview_log.Helpers;
 
 using Calendar = interview_log.Models.Calendar;
 namespace interview_log.Controllers
 {
-    public enum Purpose
-    {
-        NewAdmin, NewAddress
-    }
-    
+
     public class CalendarController : Controller
     {
        public Calendar CurrentCalendar = new Calendar();
         CancellationToken cancellationToken = new CancellationToken(false);
+        ApplicationDbContext db = new ApplicationDbContext();
 
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult ChangeCalendarAddress(string newAddress)
+        [HttpPost]
+        public ActionResult Index(string address)
         {
-            CalendarService service = (CalendarService)Session["service"];
-            string fullAddress = newAddress + "@group.calendar.google.com"	;
+            return View();
+        }
+
+        public async Task<ActionResult>  ChangeCalendarAddress(string newAddress)
+        {
+            Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp.AuthResult AuthResult = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).
+              AuthorizeAsync(cancellationToken);
+            if (AuthResult.Credential == null)
+                return new RedirectResult(AuthResult.RedirectUri);
+            CalendarService service = new CalendarService(new BaseClientService.Initializer
+            {
+                HttpClientInitializer = AuthResult.Credential,
+                ApplicationName = "Interview Log"
+            });
             var calendarList = service.CalendarList.List().Execute().Items;
             var calendar = from c in calendarList
-                           where c.Id == fullAddress
+                           where c.Id == newAddress
                            select c;
-
-            if (calendar.ToList<Google.Apis.Calendar.v3.Data.CalendarListEntry>().Count != 0) 
+            if (calendar.ToList<Google.Apis.Calendar.v3.Data.CalendarListEntry>().Count != 0 && CurrentCalendar.CalendarAddress != newAddress) 
             {
                 CurrentCalendar.CalendarAddress = newAddress;
-                GiveAccessToCalendar(null);
+                GiveAccessToCalendar(interview_log.Models.User.AdminsWithoutMe(currentUserEmail()), service, "owner");
                 this.Flash("success", "Calendar address has been successfully updated");
                 return RedirectToAction("Index", "SiteSettings");
             }
-            this.Flash("error", "This calendar dosnt exist or you dont have permission");
+            this.Flash("error", "Calendar address has not been changed");
            
             return RedirectToAction("Index", "SiteSettings");
            }
 
-        private void GiveAccessToCalendar(User [] Admins)
+        private void GiveAccessToCalendar(User[] admins, CalendarService service, string role)
         {
-            CalendarService service  = (CalendarService)Session["service"];
-            string fullAddress = CurrentCalendar.CalendarAddress +"@group.calendar.google.com";
             AclRule newRule = new AclRule();
-            newRule.Role = "owner";
+            newRule.Role = role;
             newRule.Scope = new AclRule.ScopeData();
             newRule.Scope.Type = "user";
-            foreach(User user in Admins)
+            foreach(User user in admins)
             {
               newRule.Scope.Value = user.Email;
-              service.Acl.Insert(newRule, fullAddress).Execute();
+              service.Acl.Insert(newRule, CurrentCalendar.CalendarAddress).Execute();
             }
         }
 
-        public ActionResult GiveAccessToNewAdmin(string email)
+        public async Task<ActionResult> ChangeAccessLevel(string email, string role)
         {
+            Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp.AuthResult AuthResult = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).
+              AuthorizeAsync(cancellationToken);
+            if (AuthResult.Credential == null)
+                return new RedirectResult(AuthResult.RedirectUri);
+            CalendarService service = new CalendarService(new BaseClientService.Initializer
+            {
+                HttpClientInitializer = AuthResult.Credential,
+                ApplicationName = "Interview Log"
+            });
             User newAdmin = new User();
             newAdmin.Email = email;
-            GiveAccessToCalendar(new[] { newAdmin });
+            GiveAccessToCalendar(new[] { newAdmin }, service, role);
             return RedirectToAction("Index", "SiteSettings");
         }
 
-        //public async Task<ActionResult> GetCalendarAccess(Purpose purpose, string param)
-        //{
-        //    Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp.AuthResult AuthResult = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).
-        //      AuthorizeAsync(cancellationToken);
-        //    if (AuthResult.Credential == null)
-        //        return new RedirectResult(AuthResult.RedirectUri);
-        //    CalendarService service = new CalendarService(new BaseClientService.Initializer
-        //    {
-        //        HttpClientInitializer = AuthResult.Credential,
-        //        ApplicationName = "Interview Log"
-        //    });
-        //    Session["service"] = service;
+        private string currentUserEmail()
+        {
+            string userId = (string)User.Identity.GetUserId();
+            var currentUser = db.Users.Find(userId);
+            return currentUser.Email;
+        }
 
-        //    switch(purpose)
-        //    {
-        //        case Purpose.NewAddress:
-        //            return RedirectToAction("ChangeCalendarAddress", new { newAddress  = param});
-        //        case Purpose.NewAdmin:
-        //            return RedirectToAction("GiveAccessToNewAdmin", new { email = param});
-        //        default:
-        //            return RedirectToAction("Index", "SiteSettins"); 
-        //    }
-        //}
-
-
-    }
+   }
 }
