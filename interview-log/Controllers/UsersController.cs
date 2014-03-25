@@ -11,6 +11,7 @@ using System.Data.Entity.Validation;
 using System.Diagnostics;
 using Antlr.Runtime.Misc;
 using System.Collections;
+using System;
 
 
 namespace interview_log.Controllers
@@ -26,33 +27,57 @@ namespace interview_log.Controllers
         // GET: /Users/Details/5
         public ActionResult Details(string id)
         {
-            string userId = id == null ? User.Identity.GetUserId() : id;
+            string currentUser = GetCurrentUserId();
+            string userId = id == null ? currentUser : id;
             User user = db.Users.Find(userId);
 
             if (user == null)
-                return HttpNotFound();
+                return HttpNotFound("The user you are watching for does not exist!  :(");
 
-            List<Attachment> images = user.Attachments.Where(item => item.Type == Type.Image).ToList();
-            ViewBag.Images = images;
-            
-            ViewBag.Files = user.Attachments.Where(item => item.Type == Type.File);
+            ViewBag.CurrentUser = currentUser;
+
             return View(user);
         }
 
         [HttpPost]
         public ActionResult Details(HttpPostedFileBase file)
         {
-            string userId = User.Identity.GetUserId();
+            string userId = GetCurrentUserId();
             User user = db.Users.Find(userId);
-            Attachment attachment = new Attachment(ref file, userId);
-            user.Attachments.Add(attachment);
+            user.Attachments.Add(new Attachment(ref file, userId));
             db.SaveChanges(); 
+            return RedirectToAction("Details");
+        }
+
+        public ActionResult LeaveComment(string text, string Id)
+        {
+            string userId = GetCurrentUserId();
+            User user = db.Users.Find(Id);
+            if (user == null) return HttpNotFound();
+
+            user.Comments.Add(new Comment(author: userId, text: text));
+            db.SaveChanges(); 
+
+            return RedirectToAction("Details");
+        }
+
+        public ActionResult DeleteComment(System.Guid Id)
+        {
+            string userId = GetCurrentUserId();
+            User user = db.Users.Find(userId);
+
+            if (user == null)
+                return HttpNotFound();
+
+            Comment toDelete = user.Comments.First(item => item.Id == Id);
+            user.Comments.Remove(toDelete);
+            db.SaveChanges();
             return RedirectToAction("Details");
         }
 
         public ActionResult DeleteAttachment(System.Guid Id)
         {
-            string userId = User.Identity.GetUserId();
+            string userId = GetCurrentUserId();
             User user = db.Users.Find(userId);
 
             if (user == null)
@@ -62,6 +87,15 @@ namespace interview_log.Controllers
             toDelete.Delete();
             db.SaveChanges();
             return RedirectToAction("Details");
+        }
+
+        private string GetCurrentUserId()
+        {
+            return User.Identity.GetUserId();
+        }
+
+        private void DeleteItem<T>()
+        {
         }
 
         // GET: /Users/Edit/5
@@ -114,6 +148,7 @@ namespace interview_log.Controllers
             return View(user);
         }
 
+
         // POST: /Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -124,6 +159,8 @@ namespace interview_log.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
 
         protected override void Dispose(bool disposing)
         {

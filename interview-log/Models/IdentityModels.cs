@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
+using System.Linq;
 
 namespace interview_log.Models
 {
@@ -15,6 +16,7 @@ namespace interview_log.Models
         public User()
         {
             Attachments = new HashSet<Attachment>();
+            Comments = new HashSet<Comment>();
         }
         public string Email {get; set;}
         public string Position { get; set; }
@@ -22,6 +24,16 @@ namespace interview_log.Models
         public bool Admin { get; set; }
         public bool Interviewer { get; set; }
         public virtual ICollection<Attachment> Attachments { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+
+        public IEnumerable<Attachment> Images()
+        {
+            return Attachments.Where(item => item.Type == Type.Image);
+        }
+        public IEnumerable<Attachment> Files()
+        {
+            return Attachments.Where(item => item.Type == Type.File);
+        }
     }
 
     public class ApplicationDbContext : IdentityDbContext<User>

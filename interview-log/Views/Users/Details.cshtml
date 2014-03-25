@@ -3,9 +3,8 @@
     ViewBag.Title = "Details";
 }
 
-
 <h2>Details</h2>
-
+<div class="alert alert-danger" id="alert" style="display:none"></div>
 <div>
     <h4>User</h4>
 	<hr />
@@ -41,6 +40,9 @@
 
 <script type="text/javascript">
 
+    var CommentValidationError = 'The comment field cannot be empty';
+    var FileValidationError = 'Choose the file you want to upload, please!'
+
     function showLarge(id, count) {
         smallAll(count);
         document.getElementById(id).style.display = "none";
@@ -52,47 +54,103 @@
             document.getElementById(i).style.display = "";
         }
     }
+    function validateComment(comment) {
+        if(!comment.value)
+            return showAlert(CommentValidationError);
+        return true;
+    }
+    function validateFile(file) {
+        if (!file.value)
+            return showAlert(FileValidationError);
+        return true;
+    }
+    function showAlert(text) {
+        var doc = document.getElementById('alert');
+        doc.textContent = text;
+        doc.style.display = "";
+        return false;
+    }
 </script>
 
-@{
-        
-}
 
 <h3>Images:</h3>
 @{
     int i = 0;
-    int imagesQuantity = ViewBag.Images.Count;
+    List<interview_log.Models.Attachment> images = Model.Images().ToList();
+    int imagesQuantity = images.Count;
 }
 <table border="1">
-    @foreach (var item in ViewBag.Images)
+    @foreach (var image in images)
     {
 
         <td>
-            <a href="javascript:showLarge('@i', @imagesQuantity)"><img src="~/uploads/images/@Model.Id/@item.Name" width="100" id="@i" title="click to enlarge" /></a>
-            <a href="javascript:smallAll(@imagesQuantity)"><img src="~/uploads/images/@Model.Id/@item.Name" width="500" id="@i-large" style="display:none" title="click to make it small again" /></a>
-            <p><a href="DeleteAttachment/@item.Id">delete!</a></p>
+            <a href="javascript:showLarge('@i', @imagesQuantity)"><img src="~/uploads/images/@Model.Id/@image.Name" width="100" id="@i" title="click to enlarge" /></a>
+            <a href="javascript:smallAll(@imagesQuantity)"><img src="~/uploads/images/@Model.Id/@image.Name" width="500" id="@i-large" style="display:none" title="click to make it small again" /></a>
+            @Html.ActionLink("delete!", "DeleteAttachment/" + image.Id)
         </td>
         i++;
     }
 </table>
-<h3>files:</h3>
-<div class="row">
-    @foreach (var file in ViewBag.Files)
-    {
-        <div class="col-md-4">
-            <p>
-                @file.Name <br />
-                @file.Size <br />
-                <a href="DeleteAttachment/@file.Id">delete!</a>
-            </p> 
-            <p><a class="btn btn-danger"href="~/uploads/files/@Model.Id/@file.Name">Get it! &raquo;</a></p>
-        </div>
-    }
+<div class="breadcrumb">
+    <h3>files:</h3>
+    <div class="row">
+        @foreach (var file in Model.Files())
+        {
+            <div class="col-md-4">
+                <p>
+                    @file.Name <br />
+                    @file.Size <br />
+                    @Html.ActionLink("delete!", "DeleteAttachment/" + file.Id)
+                </p>
+                <p><a class="btn btn-danger" href="~/uploads/files/@Model.Id/@file.Name">Get it! &raquo;</a></p>
+            </div>
+        }
+    </div>
+
+    <form action="" method="post" enctype="multipart/form-data">
+
+        <label for="file"></label>
+        <input type="file" name="file" id="file" />
+
+        <input type="submit" onclick="return validateFile(file)" />
+    </form>
+
 </div>
-<form action="" method="post" enctype="multipart/form-data">
 
-    <label for="file"></label>
-    <input type="file" name="file" id="file" />
+@if (!Model.Comments.Any())
+{
+        <div class="well">
+            <b>No comments! Be first!</b>
+        </div>
+    <br />
+}
+else
+{
+    <b>Comments:</b>
+}
 
-    <input type="submit" />
-</form>
+@foreach (var comment in Model.Comments)
+{
+    <div class="well">
+        @Html.ActionLink(comment.Author, "Details/" + comment.AuthorId)
+        @comment.Date
+        @Html.ActionLink("delete!", "DeleteComment/" + comment.Id)
+        <br />
+        @comment.Text
+    </div>
+}
+
+<div class="form-horizontal">
+
+    <div class="form-group">
+        @using (Html.BeginForm(actionName: "LeaveComment", controllerName: "Users"))
+        {
+            <b>leave a comment:</b>
+            <br />
+            <textarea name="text" id="text"></textarea>
+            @Html.HiddenFor(recipient => Model.Id)
+            <input type="submit" value="go!" class="btn btn-success" onclick="return validateComment(text)" />
+        }
+
+    </div>
+</div>
