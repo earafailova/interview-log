@@ -2,6 +2,54 @@
 @{
     ViewBag.Title = "Details";
 }
+<script type="text/javascript">
+
+    var CommentValidationError = 'The comment field cannot be empty';
+    var FileValidationError = 'Choose the file you want to upload, please!'
+    var TagValidationError = 'Tag name cannot be empty'
+
+    function hideTagForm() {
+        document.getElementById('tag').style.display = "none";
+        document.getElementById('tag_button').style.display = "";
+    }
+    function showTagForm() {
+        document.getElementById('tag').style.display = "";
+        document.getElementById('tag_button').style.display = "none";
+    }
+
+    function showLarge(id, count) {
+        smallAll(count);
+        document.getElementById(id).style.display = "none";
+        document.getElementById(id + '-large').style.display = "";
+    }
+    function smallAll(count) {
+        for (var i = 0; i < count; i++) {
+            document.getElementById(i + '-large').style.display = "none";
+            document.getElementById(i).style.display = "";
+        }
+    }
+    function validateComment(comment) {
+        if (!comment.value)
+            return showAlert(CommentValidationError);
+        return true;
+    }
+    function validateTag(tag) {
+        if (!tag.value)
+            return showAlert(TagValidationError);
+        return true;
+    }
+    function validateFile(file) {
+        if (!file.value)
+            return showAlert(FileValidationError);
+        return true;
+    }
+    function showAlert(text) {
+        var doc = document.getElementById('alert');
+        doc.textContent = text;
+        doc.style.display = "";
+        return false;
+    }
+</script>
 
 <h2>Details</h2>
 <div class="alert alert-danger" id="alert" style="display:none"></div>
@@ -29,48 +77,35 @@
         <dd>
             @Html.DisplayFor(model => model.Position)
         </dd>
-       
+        <dt>
+            @Html.DisplayNameFor(model => model.Tags)
+        </dt>
+        <dd>
+            @foreach (var tag in Model.Tags)
+            {
+                <span class="label label-default" title="@tag.Info">@tag.Name</span>
+            }
+        </dd>
 
     </dl>
 </div>
+
+<div id="tag" style="display:none">
+    @using (Html.BeginForm(actionName: "Tag", controllerName: "Users"))
+    {
+        <b>Tag it:</b>
+        <input type="text" name="tag" id="text" placeholder="Tag"/>
+        <input type="text" name="info" id="info" placeholder="Description"/>
+        <input type="submit" value="Okay!" class="btn btn-success" onclick="hideTagForm(); return validateTag(tag)" />
+    }
+</div>
+<a href="javascript:showTagForm()" id="tag_button" class="btn btn-success btn-small"><i class="icon-white icon-ok-circle"></i> Tag it!</a>
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
 
-<script type="text/javascript">
-
-    var CommentValidationError = 'The comment field cannot be empty';
-    var FileValidationError = 'Choose the file you want to upload, please!'
-
-    function showLarge(id, count) {
-        smallAll(count);
-        document.getElementById(id).style.display = "none";
-        document.getElementById(id + '-large').style.display = "";
-    }
-    function smallAll(count) {
-        for (var i = 0; i < count; i++) {
-            document.getElementById(i + '-large').style.display = "none";
-            document.getElementById(i).style.display = "";
-        }
-    }
-    function validateComment(comment) {
-        if(!comment.value)
-            return showAlert(CommentValidationError);
-        return true;
-    }
-    function validateFile(file) {
-        if (!file.value)
-            return showAlert(FileValidationError);
-        return true;
-    }
-    function showAlert(text) {
-        var doc = document.getElementById('alert');
-        doc.textContent = text;
-        doc.style.display = "";
-        return false;
-    }
-</script>
 
 
 <h3>Images:</h3>

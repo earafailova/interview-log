@@ -17,6 +17,7 @@ namespace interview_log.Models
         {
             Attachments = new HashSet<Attachment>();
             Comments = new HashSet<Comment>();
+            Tags = new HashSet<Tag>();
         }
         public string Email {get; set;}
         public string Position { get; set; }
@@ -25,6 +26,7 @@ namespace interview_log.Models
         public bool Interviewer { get; set; }
         public virtual ICollection<Attachment> Attachments { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Tag> Tags { get; set;  }
 
         public IEnumerable<Attachment> Images()
         {

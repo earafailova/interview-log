@@ -49,6 +49,20 @@ namespace interview_log.Controllers
             return RedirectToAction("Details");
         }
 
+        public ActionResult DeleteAttachment(System.Guid Id)
+        {
+            string userId = GetCurrentUserId();
+            User user = db.Users.Find(userId);
+
+            if (user == null)
+                return HttpNotFound();
+            Attachment toDelete = user.Attachments.First(item => item.Id == Id);
+            user.Attachments.Remove(toDelete);
+            toDelete.Delete();
+            db.SaveChanges();
+            return RedirectToAction("Details");
+        }
+
         public ActionResult LeaveComment(string text, string Id)
         {
             string userId = GetCurrentUserId();
@@ -75,17 +89,14 @@ namespace interview_log.Controllers
             return RedirectToAction("Details");
         }
 
-        public ActionResult DeleteAttachment(System.Guid Id)
+        public ActionResult Tag(string tag, string info)
         {
             string userId = GetCurrentUserId();
             User user = db.Users.Find(userId);
 
-            if (user == null)
-                return HttpNotFound();
-            Attachment toDelete = user.Attachments.First(item => item.Id == Id);
-            user.Attachments.Remove(toDelete);
-            toDelete.Delete();
+            user.Tags.Add(new Tag(name: tag, info: info));
             db.SaveChanges();
+
             return RedirectToAction("Details");
         }
 

@@ -7,19 +7,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace interview_log.Models
 {
-    public class Tag 
+    public class Tag
     {
-        [Key] public string Name { get; set; }
-        public string Info { get; set; }
-    }
-
-    public class TagsDbContext : DbContext
-    {
-        public TagsDbContext()
-            : base("DefaultConnection")
+        public Tag() { }
+        public Tag(string name, string info = "superman in all branches of IT")
         {
+            Name = name;
+            Info = info;
         }
-
-        public DbSet<Tag> Tags { get; set; }
+        [Key] 
+        public string Name { get; set; }
+        public string Info { get; set; }
     }
 }
