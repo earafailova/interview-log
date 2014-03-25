@@ -10,7 +10,7 @@ namespace interview_log.Models
 {
     public class Calendar
     {
-        private const string  DefaultAddress = @"qknusl2s3m2nau74obbr804fjk";
+        private const string DefaultAddress = @"qknusl2s3m2nau74obbr804fjk@group.calendar.google.com";
         public string CalendarAddress { get;
                set;
            // { 

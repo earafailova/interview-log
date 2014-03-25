@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace interview_log.Models
 {
+     
     public enum State : byte 
     {
         Unknown, Accepted, Postponed
@@ -33,6 +34,18 @@ namespace interview_log.Models
         public IEnumerable<Attachment> Files()
         {
             return Attachments.Where(item => item.Type == Type.File);
+        }
+
+        public static User[] Admins()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            return db.Users.Where<User>(user => user.Admin == true).ToArray<User>();
+        }
+
+        public static User[] AdminsWithoutMe(string myEmail)
+        {
+            User[] admins = User.Admins();
+            return System.Array.FindAll<User>(admins, user => user.Email != myEmail);
         }
     }
 

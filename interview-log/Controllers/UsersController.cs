@@ -65,10 +65,10 @@ namespace interview_log.Controllers
         {
             string userId = GetCurrentUserId();
             User user = db.Users.Find(userId);
-
+            db.
             if (user == null)
                 return HttpNotFound();
-
+            
             Comment toDelete = user.Comments.First(item => item.Id == Id);
             user.Comments.Remove(toDelete);
             db.SaveChanges();

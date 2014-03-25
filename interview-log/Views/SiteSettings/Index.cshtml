@@ -1,30 +1,29 @@
 ﻿@using MvcFlashMessages
-@using Enums;
 @model interview_log.Models.Calendar
 @{
     ViewBag.Title = "SiteSettings";
 }
 @Html.RenderFlash()
 
-@using (Html.BeginForm("GetCalendarAccess", "Calendar", new {purpose = Purpose.NewAddress, param = Model.CalendarAddress }))
+@using (Html.BeginForm("ChangeCalendarAddress", "Calendar"))
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <hr />
-        <div class="form-group">
-            @Html.LabelFor(model => model.CalendarAddress, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CalendarAddress)
-                @Html.ValidationMessageFor(model => model.CalendarAddress)
-            </div>
-        </div>
-    </div>
-
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
+            Calendar Address <br /> <br />
+            <input type="text" id="newAddress" name="newAddress"/>
+            <br/> <br />
             <input type="submit" value="Save" class="btn btn-default" />
-        </div>
     </div>
 
+}
+
+<br/>
+Administrators: <br/>
+@{
+    foreach(interview_log.Models.User user in interview_log.Models.User.Admins())
+    {
+        string Url  ="/Users/Details/" + user.Id;
+        <li><a href=@Url>@user.Email</a></li>
+    }
 }
