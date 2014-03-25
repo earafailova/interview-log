@@ -40,21 +40,41 @@
 </p>
 
 <script type="text/javascript">
-    //this function opens one and closes the other
-    function showCloseLevel(idOpen, idClose) {
-        //Show idOpen
-        document.getElementById(idOpen).style.display = "";
-        //Close idClose
-        document.getElementById(idClose).style.display = "none";
+
+    function showLarge(id, count) {
+        smallAll(count);
+        document.getElementById(id).style.display = "none";
+        document.getElementById(id + '-large').style.display = "";
+    }
+    function smallAll(count) {
+        for (var i = 0; i < count; i++) {
+            document.getElementById(i + '-large').style.display = "none";
+            document.getElementById(i).style.display = "";
+        }
     }
 </script>
 
-<h3>Images:</h3>
-@foreach (var item in ViewBag.Images)
-{
-    <a href="javascript:showCloseLevel('@item.Id 2', '@item.Id')"><img src="~/uploads/images/@Model.Id/@item.Name" width="100" id="@item" title="click to enlarge" /></a>
-    <a href="javascript:showCloseLevel('@item.Id', '@item.Id 2')"><img src="~/uploads/images/@Model.Id/@item.Name" width="500" id="@item 2" style="display:none" title="click to make it small again" /></a>
+@{
+        
 }
+
+<h3>Images:</h3>
+@{
+    int i = 0;
+    int imagesQuantity = ViewBag.Images.Count;
+}
+<table border="1">
+    @foreach (var item in ViewBag.Images)
+    {
+
+        <td>
+            <a href="javascript:showLarge('@i', @imagesQuantity)"><img src="~/uploads/images/@Model.Id/@item.Name" width="100" id="@i" title="click to enlarge" /></a>
+            <a href="javascript:smallAll(@imagesQuantity)"><img src="~/uploads/images/@Model.Id/@item.Name" width="500" id="@i-large" style="display:none" title="click to make it small again" /></a>
+            <p><a href="DeleteAttachment/@item.Id">delete!</a></p>
+        </td>
+        i++;
+    }
+</table>
 <h3>files:</h3>
 <div class="row">
     @foreach (var file in ViewBag.Files)

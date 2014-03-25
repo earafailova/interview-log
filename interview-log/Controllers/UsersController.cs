@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
 using Antlr.Runtime.Misc;
+using System.Collections;
 
 
 namespace interview_log.Controllers
@@ -31,8 +32,9 @@ namespace interview_log.Controllers
             if (user == null)
                 return HttpNotFound();
 
-
-            ViewBag.Images = user.Attachments.Where(item => item.Type == Type.Image);
+            List<Attachment> images = user.Attachments.Where(item => item.Type == Type.Image).ToList();
+            ViewBag.Images = images;
+            
             ViewBag.Files = user.Attachments.Where(item => item.Type == Type.File);
             return View(user);
         }
@@ -57,6 +59,7 @@ namespace interview_log.Controllers
                 return HttpNotFound();
             Attachment toDelete = user.Attachments.First(item => item.Id == Id);
             user.Attachments.Remove(toDelete);
+            toDelete.Delete();
             db.SaveChanges();
             return RedirectToAction("Details");
         }

@@ -13,15 +13,18 @@ using Google.Apis.Auth.OAuth2.Mvc;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using System.Threading;
-using Google.Apis.Interview_log;
+//using Google.Apis.Interview_log;
 using MvcFlashMessages;
 using Google.Apis.Calendar.v3.Data;
-using Enums;
+//using Enums;
 
 using Calendar = interview_log.Models.Calendar;
 namespace interview_log.Controllers
 {
-
+    public enum Purpose
+    {
+        NewAdmin, NewAddress
+    }
     
     public class CalendarController : Controller
     {
@@ -77,29 +80,29 @@ namespace interview_log.Controllers
             return RedirectToAction("Index", "SiteSettings");
         }
 
-        public async Task<ActionResult> GetCalendarAccess(Purpose purpose, string param)
-        {
-            Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp.AuthResult AuthResult = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).
-              AuthorizeAsync(cancellationToken);
-            if (AuthResult.Credential == null)
-                return new RedirectResult(AuthResult.RedirectUri);
-            CalendarService service = new CalendarService(new BaseClientService.Initializer
-            {
-                HttpClientInitializer = AuthResult.Credential,
-                ApplicationName = "Interview Log"
-            });
-            Session["service"] = service;
+        //public async Task<ActionResult> GetCalendarAccess(Purpose purpose, string param)
+        //{
+        //    Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp.AuthResult AuthResult = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).
+        //      AuthorizeAsync(cancellationToken);
+        //    if (AuthResult.Credential == null)
+        //        return new RedirectResult(AuthResult.RedirectUri);
+        //    CalendarService service = new CalendarService(new BaseClientService.Initializer
+        //    {
+        //        HttpClientInitializer = AuthResult.Credential,
+        //        ApplicationName = "Interview Log"
+        //    });
+        //    Session["service"] = service;
 
-            switch(purpose)
-            {
-                case Purpose.NewAddress:
-                    return RedirectToAction("ChangeCalendarAddress", new { newAddress  = param});
-                case Purpose.NewAdmin:
-                    return RedirectToAction("GiveAccessToNewAdmin", new { email = param});
-                default:
-                    return RedirectToAction("Index", "SiteSettins"); 
-            }
-        }
+        //    switch(purpose)
+        //    {
+        //        case Purpose.NewAddress:
+        //            return RedirectToAction("ChangeCalendarAddress", new { newAddress  = param});
+        //        case Purpose.NewAdmin:
+        //            return RedirectToAction("GiveAccessToNewAdmin", new { email = param});
+        //        default:
+        //            return RedirectToAction("Index", "SiteSettins"); 
+        //    }
+        //}
 
 
     }
