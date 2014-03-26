@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
 using System.Linq;
+using System.Text;
+using LINQtoCSV;
 
 namespace interview_log.Models
 {
@@ -20,7 +22,7 @@ namespace interview_log.Models
             Comments = new HashSet<Comment>();
             Tags = new HashSet<Tag>();
         }
-        public string Email {get; set;}
+         public string Email {get; set;}
         public string Position { get; set; }
         public byte State { get; set; }
         public bool Admin { get; set; }
@@ -48,6 +50,17 @@ namespace interview_log.Models
         {
             User[] admins = User.Admins();
             return System.Array.FindAll<User>(admins, user => user.Email != myEmail);
+        }
+
+        public string TagsToString()
+        {
+            StringBuilder strBuidler = new StringBuilder();
+            foreach( Tag tag in Tags)
+            {
+                strBuidler.Append(tag.Name);
+                strBuidler.Append(",");
+            }
+            return strBuidler.ToString();
         }
     }
 

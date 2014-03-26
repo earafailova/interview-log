@@ -27,3 +27,18 @@ Administrators: <br/>
         <li><a href=@Url>@user.Email</a></li>
     }
 }
+<br/>
+@using (Html.BeginForm("WriteCSV", "SiteSettings"))
+{
+    <input type="submit" value="Export CSV" class="btn btn-default"/>
+}
+
+<br />
+
+<form action="/SiteSettings/ReadCSV" method="post" enctype="multipart/form-data">
+
+    <label for="file"></label>
+    <input type="file" name="file" id="file" />
+
+    <input type="submit" value="Import CSV" class="btn btn-default" />
+</form>
