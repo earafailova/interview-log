@@ -17,5 +17,12 @@ namespace interview_log.Controllers
             return View(CurrentCalendar);
            
         }
+
+        [HttpPost]
+        public ActionResult CreateInterview(string interviewer, string interviewee, DateTime time)
+        {
+
+            return View(CurrentCalendar);
+        }
 	}
 }

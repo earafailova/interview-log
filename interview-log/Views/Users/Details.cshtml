@@ -43,11 +43,32 @@
             return showAlert(FileValidationError);
         return true;
     }
+    function validateInterview(interviewer) {
+        var regex = /[-0-9a-zA-Z.]+@@[-0-9a-zA-Z.]+/;
+        var val = interviewer.value;
+        if (!val || !regex.test(val))
+            return showAlert("You must specify interviewer email correctly!");
+        return true;
+    }
+
+    function validateDateTime(dateTime) {
+        if (!dateTime.value)
+            return showAlert("Choose the date and the time!");
+        return true;
+    }
     function showAlert(text) {
         var doc = document.getElementById('alert');
         doc.textContent = text;
         doc.style.display = "";
         return false;
+    }
+        
+    function ajaxIncDlCounter(fileId) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", "IncDlCounter/" + "?fileId=" + fileId, false);
+        xmlhttp.send();
+        var div = document.getElementById(fileId + '-dl-count');
+        div.innerHTML++;
     }
 </script>
 
@@ -89,6 +110,7 @@
 
     </dl>
 </div>
+
 
 <div id="tag" style="display:none">
     @using (Html.BeginForm(actionName: "Tag", controllerName: "Users"))
@@ -135,9 +157,10 @@
                 <p>
                     @file.Name <br />
                     @file.Size <br />
+                    downloaded <span id="@file.Id-dl-count">@file.DownloadsCount</span> times <br />
                     @Html.ActionLink("delete!", "DeleteAttachment/" + file.Id)
                 </p>
-                <p><a class="btn btn-danger" href="~/uploads/files/@Model.Id/@file.Name">Get it! &raquo;</a></p>
+                <p><a class="btn btn-danger" href="~/uploads/files/@Model.Id/@file.Name" onclick="ajaxIncDlCounter('@file.Id')">Get it! &raquo;</a></p>
             </div>
         }
     </div>
@@ -185,6 +208,22 @@ else
             <textarea name="text" id="text"></textarea>
             @Html.HiddenFor(recipient => Model.Id)
             <input type="submit" value="go!" class="btn btn-success" onclick="return validateComment(text)" />
+        }
+
+    </div>
+</div>
+
+<div class="form-horizontal">
+
+    <div class="form-group">
+        @using (Html.BeginForm(actionName: "CreateInterview", controllerName: "Calendar"))
+        {
+            <b>create an interview:</b>
+            <br />
+            <input name="interviewer" placeholder="interviewer" />
+            <input name="interviewee" value="@Model.Email" style="display:none" />
+            <input type="datetime-local" name="time"/>
+            <input type="submit" value="go!" class="btn btn-success" onclick="return validateInterview(interviewer) && validateDateTime(time)" />
         }
 
     </div>

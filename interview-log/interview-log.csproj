@@ -42,6 +42,14 @@
     <Reference Include="CsvHelper">
       <HintPath>..\packages\CsvHelper.2.5.0\lib\net40-client\CsvHelper.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Apis">
       <HintPath>..\packages\Google.Apis.1.8.1\lib\net40\Google.Apis.dll</HintPath>
     </Reference>
@@ -166,12 +174,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.1.0.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -230,6 +232,14 @@
     <Compile Include="Migrations\201403251020334_addedtags.cs" />
     <Compile Include="Migrations\201403251020334_addedtags.Designer.cs">
       <DependentUpon>201403251020334_addedtags.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201403260706289_dbsetsadded.cs" />
+    <Compile Include="Migrations\201403260706289_dbsetsadded.Designer.cs">
+      <DependentUpon>201403260706289_dbsetsadded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201403260944329_InfoFieldForUserAdded.cs" />
+    <Compile Include="Migrations\201403260944329_InfoFieldForUserAdded.Designer.cs">
+      <DependentUpon>201403260944329_InfoFieldForUserAdded.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -319,6 +329,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201403251020334_addedtags.resx">
       <DependentUpon>201403251020334_addedtags.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201403260706289_dbsetsadded.resx">
+      <DependentUpon>201403260706289_dbsetsadded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201403260944329_InfoFieldForUserAdded.resx">
+      <DependentUpon>201403260944329_InfoFieldForUserAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

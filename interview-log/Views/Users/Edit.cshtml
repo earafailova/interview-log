@@ -15,13 +15,25 @@
         <h4>User</h4>
         <hr />
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.Id)
         @Html.HiddenFor(model => model.Email)
         <div class="form-group">
-            @Html.LabelFor(model => model.UserName, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.UserName)
-                @Html.ValidationMessageFor(model => model.UserName)
+                <input type="text" name="userId" style="display:none" value="@Model.Id"/>
+                <input type="text" name="name" placeholder="user name"/>
+                <br />
+                <br />
+                <textarea name="info" placeholder="Describe yourself, please."></textarea>
+                <br />
+                <br />
+                <p>
+                    state:
+                    <select name="state">
+                        <option value="0">Unknown</option>
+                        <option value="1">Discussed</option>
+                        <option value="2">Postponed</option>
+                        <option value="3">Accepted</option>
+                    </select>
+                </p>
             </div>
         </div>
 

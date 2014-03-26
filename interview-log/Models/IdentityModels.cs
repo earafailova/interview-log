@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Web;
+using System.Data.Entity;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace interview_log.Models
 {
@@ -25,6 +25,8 @@ namespace interview_log.Models
         public byte State { get; set; }
         public bool Admin { get; set; }
         public bool Interviewer { get; set; }
+        public string Info { get; set; }
+
         public virtual ICollection<Attachment> Attachments { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Tag> Tags { get; set;  }
@@ -49,6 +51,30 @@ namespace interview_log.Models
             User[] admins = User.Admins();
             return System.Array.FindAll<User>(admins, user => user.Email != myEmail);
         }
+
+        public static User[] Search(string q)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            Regex query = new Regex(Regex.Escape(q.ToLower()));
+
+            var byUser = db.Users.ToList().Where(user => 
+            {
+                bool result = false;
+                result |= query.IsMatch(user.UserName.ToLower());
+                if (user.Info != null)
+                {
+                    result |= query.IsMatch(user.Info);
+                }
+                return result;
+            });
+
+            var byTag = db.Users.ToList().
+                Where(user => user.Tags.
+                    Any(tag => query.IsMatch(tag.Name.ToLower())));
+
+            return byTag.Union(byUser).ToArray();  
+        }
+
     }
 
     public class ApplicationDbContext : IdentityDbContext<User>
@@ -57,5 +83,10 @@ namespace interview_log.Models
             : base("DefaultConnection")
         {
         }
+
+        public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+
     }
 }

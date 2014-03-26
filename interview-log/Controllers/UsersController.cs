@@ -1,29 +1,31 @@
-﻿using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using interview_log.Models;
 using Microsoft.AspNet.Identity;
-using System.IO;
-using System.Collections.Generic;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
-using Antlr.Runtime.Misc;
-using System.Collections;
 using System;
-
-
+using System.Text.RegularExpressions;
 namespace interview_log.Controllers
 {
     public class UsersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        delegate bool del(string query, string thing);
+
         // GET: /Users/
         public ActionResult Index()
         {
             return View(db.Users.ToList());
         }
+
+        [HttpPost]
+        public ActionResult Index(string q, DateTime? from, DateTime? to)
+        {
+            var response = interview_log.Models.User.Search(q);
+            return View(response);
+        }
+
         // GET: /Users/Details/5
         public ActionResult Details(string id)
         {
@@ -58,6 +60,8 @@ namespace interview_log.Controllers
                 return HttpNotFound();
             Attachment toDelete = user.Attachments.First(item => item.Id == Id);
             user.Attachments.Remove(toDelete);
+            db.Attachments.Remove(toDelete);
+
             toDelete.Delete();
             db.SaveChanges();
             return RedirectToAction("Details");
@@ -79,12 +83,13 @@ namespace interview_log.Controllers
         {
             string userId = GetCurrentUserId();
             User user = db.Users.Find(userId);
-            db.
             if (user == null)
                 return HttpNotFound();
             
             Comment toDelete = user.Comments.First(item => item.Id == Id);
             user.Comments.Remove(toDelete);
+            db.Comments.Remove(toDelete);
+
             db.SaveChanges();
             return RedirectToAction("Details");
         }
@@ -94,9 +99,14 @@ namespace interview_log.Controllers
             string userId = GetCurrentUserId();
             User user = db.Users.Find(userId);
 
-            user.Tags.Add(new Tag(name: tag, info: info));
-            db.SaveChanges();
+            var tagWeHave = db.Tags.First(existingTag => existingTag.Info == tag);
+         
+            if (tagWeHave != null)
+                user.Tags.Add(tagWeHave);
+            else
+                user.Tags.Add(new Tag(name: tag, info: info));
 
+            db.SaveChanges();
             return RedirectToAction("Details");
         }
 
@@ -133,15 +143,31 @@ namespace interview_log.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="Id,UserName,PasswordHash,SecurityStamp,Email")] User user)
+        public ActionResult Edit(string userId, string name, string position, string info, byte state)
         {
-            if (ModelState.IsValid)
+            User currentUser = db.Users.Find(GetCurrentUserId());
+            
+            if (User.Identity.GetUserId() != userId && !currentUser.Admin)
             {
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
-            return View(user);
+
+            User user = db.Users.Find(userId);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            user.UserName = name;
+            user.Info = info;
+            user.Position = position;
+
+            if (currentUser.Admin)
+            {
+                user.State = state;
+            }
+
+            return RedirectToAction("Edit");
         }
 
         // GET: /Users/Delete/5
@@ -171,7 +197,12 @@ namespace interview_log.Controllers
             return RedirectToAction("Index");
         }
 
-
+        public ActionResult IncDlCounter(Guid fileId)
+        {
+            db.Attachments.Find(fileId).IncDlCounter();
+            db.SaveChanges();
+            return RedirectToAction("Details");
+        }
 
         protected override void Dispose(bool disposing)
         {

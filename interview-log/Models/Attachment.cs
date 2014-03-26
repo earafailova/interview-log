@@ -93,6 +93,11 @@ namespace interview_log.Models
             return newFullPath;
         }
 
+        public void IncDlCounter()
+        {
+            DownloadsCount++;
+        }
+
         public void Delete()
         {
             if (File.Exists(FullPath)) File.Delete(FullPath);
