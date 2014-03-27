@@ -311,6 +311,9 @@
     <Content Include="Views\Tags\Edit.cshtml" />
     <Content Include="Views\Tags\Index.cshtml" />
     <Content Include="Views\SiteSettings\Index.cshtml" />
+    <Content Include="Views\Users\_Details.cshtml" />
+    <Content Include="Views\Users\_Attachments.cshtml" />
+    <Content Include="Views\Users\_Comments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -334,7 +337,6 @@
       <DependentUpon>201403260706289_dbsetsadded.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201403260944329_InfoFieldForUserAdded.resx">
-      
       <DependentUpon>201403260944329_InfoFieldForUserAdded.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201403260925438_useredited.resx">

@@ -1,0 +1,45 @@
+﻿@model interview_log.Models.User
+<h3>Images:</h3>
+@{
+    int i = 0;
+    List<interview_log.Models.Attachment> images = Model.Images().ToList();
+    int imagesQuantity = images.Count;
+}
+<table border="1">
+    @foreach (var image in images)
+    {
+
+        <td>
+            <a href="javascript:showLarge('@i', @imagesQuantity)"><img src="~/uploads/images/@Model.Id/@image.Name" width="100" id="@i" title="click to enlarge" /></a>
+            <a href="javascript:smallAll(@imagesQuantity)"><img src="~/uploads/images/@Model.Id/@image.Name" width="500" id="@i-large" style="display:none" title="click to make it small again" /></a>
+            @Html.ActionLink("delete!", "DeleteAttachment/" + image.Id)
+        </td>
+        i++;
+    }
+</table>
+<div class="breadcrumb">
+    <h3>files:</h3>
+    <div class="row">
+        @foreach (var file in Model.Files())
+        {
+            <div class="col-md-4">
+                <p>
+                    @file.Name <br />
+                    @file.Size <br />
+                    downloaded <span id="@file.Id-dl-count">@file.DownloadsCount</span> times <br />
+                    @Html.ActionLink("delete!", "DeleteAttachment/" + file.Id)
+                </p>
+                <p><a class="btn btn-danger" href="~/uploads/files/@Model.Id/@file.Name" onclick="ajaxIncDlCounter('@file.Id')">Get it! &raquo;</a></p>
+            </div>
+        }
+    </div>
+
+    <form action="" method="post" enctype="multipart/form-data">
+
+        <label for="file"></label>
+        <input type="file" name="file" id="file" />
+
+        <input type="submit" onclick="return validateFile(file)" />
+    </form>
+
+</div>
