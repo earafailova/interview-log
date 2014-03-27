@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
 using LINQtoCSV;
+using interview_log.Exceptions;
 
 namespace interview_log.Models
 {
@@ -21,6 +22,7 @@ namespace interview_log.Models
             Attachments = new HashSet<Attachment>();
             Comments = new HashSet<Comment>();
             Tags = new HashSet<Tag>();
+            Interviews = new HashSet<Interview>();
         }
          public string Email {get; set;}
         public string Position { get; set; }
@@ -32,6 +34,7 @@ namespace interview_log.Models
         public virtual ICollection<Attachment> Attachments { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Tag> Tags { get; set;  }
+        public virtual ICollection<Interview> Interviews { get; set; }
 
         public IEnumerable<Attachment> Images()
         {
@@ -77,17 +80,17 @@ namespace interview_log.Models
             return byTag.Union(byUser).ToArray();  
         }
 
-        public string TagsToString()
+       
+        internal static string GetName(string interviewer)
         {
-            StringBuilder strBuidler = new StringBuilder();
-            foreach( Tag tag in Tags)
-            {
-                strBuidler.Append(tag.Name);
-                strBuidler.Append(",");
-            }
-            return strBuidler.ToString();
+            ApplicationDbContext db = new ApplicationDbContext();
+            var user = db.Users.First(u => u.Email == interviewer);
+            if (user != null) return user.UserName;
+            return null;
         }
 
+       
+      
     }
 
     public class ApplicationDbContext : IdentityDbContext<User>
@@ -100,6 +103,6 @@ namespace interview_log.Models
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Tag> Tags { get; set; }
-
+        public DbSet<Interview> Interviews { get; set; }
     }
 }

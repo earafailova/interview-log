@@ -22,14 +22,7 @@ namespace interview_log.Helpers
 
         public object ConvertFromString(CsvHelper.TypeConversion.TypeConverterOptions options, string text)
         {
-            char[] separator = { ',' };
-            string[] tags = text.Split(separator);
-            HashSet<Tag> result = new HashSet<Tag>();
-            for (int i = 0; i < tags.Count() - 1; i++)
-            {
-                result.Add(new Tag(tags[i]));
-            }
-            return result;
+            return text.Split(new[] { ',' });
         }
 
         public string ConvertToString(CsvHelper.TypeConversion.TypeConverterOptions options, object tags)

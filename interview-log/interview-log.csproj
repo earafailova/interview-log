@@ -223,22 +223,19 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SiteSettingsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Exceptions\UserDoesNotExistException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\EnumerationHelper.cs" />
     <Compile Include="Helpers\TagsConverter.cs" />
-    <Compile Include="Migrations\201403250802011_init.cs" />
-    <Compile Include="Migrations\201403250802011_init.Designer.cs">
-      <DependentUpon>201403250802011_init.cs</DependentUpon>
+    <Compile Include="Migrations\201403270844559_init.cs" />
+    <Compile Include="Migrations\201403270844559_init.Designer.cs">
+      <DependentUpon>201403270844559_init.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201403251020334_addedtags.cs" />
-    <Compile Include="Migrations\201403251020334_addedtags.Designer.cs">
-      <DependentUpon>201403251020334_addedtags.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201403260925438_useredited.cs" />
-    <Compile Include="Migrations\201403260925438_useredited.Designer.cs">
-      <DependentUpon>201403260925438_useredited.cs</DependentUpon>
+    <Compile Include="Migrations\201403270941182_updated tag model.cs" />
+    <Compile Include="Migrations\201403270941182_updated tag model.Designer.cs">
+      <DependentUpon>201403270941182_updated tag model.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -246,6 +243,7 @@
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Interview.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -327,6 +325,7 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <EmbeddedResource Include="Migrations\201403250802011_init.resx">
       <DependentUpon>201403250802011_init.cs</DependentUpon>
     </EmbeddedResource>
@@ -338,9 +337,13 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201403260944329_InfoFieldForUserAdded.resx">
       <DependentUpon>201403260944329_InfoFieldForUserAdded.cs</DependentUpon>
+=======
+    <EmbeddedResource Include="Migrations\201403270844559_init.resx">
+      <DependentUpon>201403270844559_init.cs</DependentUpon>
+>>>>>>> 20038817e2bc643a4e20da51c842c5321cab7f9c
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201403260925438_useredited.resx">
-      <DependentUpon>201403260925438_useredited.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201403270941182_updated tag model.resx">
+      <DependentUpon>201403270941182_updated tag model.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

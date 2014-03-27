@@ -53,11 +53,12 @@ namespace interview_log.Controllers
         public ActionResult ReadCSV(HttpPostedFileBase file)
        {
             string fileName = System.Web.HttpContext.Current.Server.MapPath(@"~\CSV\inputCSV.csv");
+            StreamReader reader = null;
             try
             {
                 file.SaveAs(fileName);
+                reader = new StreamReader(fileName);
                 ApplicationDbContext db = new ApplicationDbContext();
-                StreamReader reader = new StreamReader(fileName);
                 var csv = new CsvReader(reader);
                 while (csv.Read())
                 {
@@ -68,7 +69,7 @@ namespace interview_log.Controllers
                          user.UserName = csv.GetField<string>("UserName");
                          user.State = csv.GetField<byte>("State");
                          user.Position = csv.GetField<string>("Position");
-                         HashSet<Tag> tags = (HashSet<Tag>)csv.GetField(typeof(HashSet<Tag>),"Tags", new TagsConverter());
+                         String[] tags = (String[])csv.GetField(typeof(String[]), "Tags", new TagsConverter());
                          AddUserTags(user, tags);
                          db.Users.Add(user);
                     }
@@ -77,32 +78,29 @@ namespace interview_log.Controllers
             }
             catch(Exception)
             {
+                reader.Close();
                 this.Flash("error", "Something has gone wrong. DataBase is not changed");
                 return RedirectToAction("Index");
             }
+            reader.Close();
            this.Flash("success", "New users added to database");
            return RedirectToAction("Index");
        }
         
         
-        [HttpPost]
-        public ActionResult CreateInterview(string interviewer, string interviewee, DateTime time)
-        {
+        
 
-            return View(CurrentCalendar);
-        }
-
-        private static void AddUserTags(Models.User user, HashSet<Tag> tags)
+        private static void AddUserTags(Models.User user, String [] tags)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            Tag newTag = new Tag();
-            foreach (Tag tag in tags)
+            for (int i = 0; i < tags.Count() && tags[i] != ""; i ++ )
             {
-                var existingTag = "hasn't defined yet";
-               // if (existingTag == tag.Name)
-                   // user.Tags.Add(tag); //change later
-                //else
-                    user.Tags.Add(tag);
+                string tagName  = tags[i];
+                var existingTag = db.Tags.First(t => t.Name == tagName);
+                if (existingTag != null)
+                   user.Tags.Add(existingTag); 
+                else
+                   user.Tags.Add(new Tag(tags[i]));
             }
         }
 	} 
