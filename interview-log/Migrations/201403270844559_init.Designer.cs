@@ -6,14 +6,14 @@ namespace interview_log.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    [GeneratedCode("EntityFramework.Migrations", "6.0.0-20911")]
-    public sealed partial class useredited : IMigrationMetadata
+    [GeneratedCode("EntityFramework.Migrations", "6.1.0-30225")]
+    public sealed partial class init : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(useredited));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(init));
         
         string IMigrationMetadata.Id
         {
-            get { return "201403260925438_useredited"; }
+            get { return "201403270844559_init"; }
         }
         
         string IMigrationMetadata.Source
