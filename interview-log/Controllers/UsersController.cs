@@ -99,7 +99,7 @@ namespace interview_log.Controllers
             string userId = GetCurrentUserId();
             User user = db.Users.Find(userId);
 
-            var tagWeHave = db.Tags.First(existingTag => existingTag.Info == tag);
+            var tagWeHave = db.Tags.FirstOrDefault(existingTag => existingTag.Name == tag);
          
             if (tagWeHave != null)
                 user.Tags.Add(tagWeHave);
