@@ -13,7 +13,7 @@ namespace interview_log.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201403270844559_init"; }
+            get { return "201403271052126_init"; }
         }
         
         string IMigrationMetadata.Source

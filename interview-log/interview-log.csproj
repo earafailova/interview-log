@@ -229,13 +229,9 @@
     </Compile>
     <Compile Include="Helpers\EnumerationHelper.cs" />
     <Compile Include="Helpers\TagsConverter.cs" />
-    <Compile Include="Migrations\201403270844559_init.cs" />
-    <Compile Include="Migrations\201403270844559_init.Designer.cs">
-      <DependentUpon>201403270844559_init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201403270941182_updated tag model.cs" />
-    <Compile Include="Migrations\201403270941182_updated tag model.Designer.cs">
-      <DependentUpon>201403270941182_updated tag model.cs</DependentUpon>
+    <Compile Include="Migrations\201403271052126_init.cs" />
+    <Compile Include="Migrations\201403271052126_init.Designer.cs">
+      <DependentUpon>201403271052126_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -325,30 +321,11 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-    <EmbeddedResource Include="Migrations\201403250802011_init.resx">
-      <DependentUpon>201403250802011_init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201403251020334_addedtags.resx">
-      <DependentUpon>201403251020334_addedtags.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201403260706289_dbsetsadded.resx">
-      <DependentUpon>201403260706289_dbsetsadded.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201403260944329_InfoFieldForUserAdded.resx">
-      <DependentUpon>201403260944329_InfoFieldForUserAdded.cs</DependentUpon>
-=======
-    <EmbeddedResource Include="Migrations\201403270844559_init.resx">
-      <DependentUpon>201403270844559_init.cs</DependentUpon>
->>>>>>> 20038817e2bc643a4e20da51c842c5321cab7f9c
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201403270941182_updated tag model.resx">
-      <DependentUpon>201403270941182_updated tag model.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201403271052126_init.resx">
+      <DependentUpon>201403271052126_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
