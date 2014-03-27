@@ -1,0 +1,39 @@
+﻿@model interview_log.Models.User
+
+@if (!Model.Comments.Any())
+{
+    <div class="well">
+        <b>No comments! Be first!</b>
+    </div>
+    <br />
+}
+else
+{
+    <b>Comments:</b>
+}
+
+@foreach (var comment in Model.Comments)
+{
+    <div class="well">
+        @Html.ActionLink(comment.Author, "Details/" + comment.AuthorId)
+        @comment.Date
+        @Html.ActionLink("delete!", "DeleteComment/" + comment.Id)
+        <br />
+        @comment.Text
+    </div>
+}
+
+<div class="form-horizontal">
+
+    <div class="form-group">
+        @using (Html.BeginForm(actionName: "LeaveComment", controllerName: "Users"))
+        {
+            <b>leave a comment:</b>
+            <br />
+            <textarea name="text" id="text"></textarea>
+            @Html.HiddenFor(recipient => Model.Id)
+            <input type="submit" value="go!" class="btn btn-success" onclick="return validateComment(text)" />
+        }
+
+    </div>
+</div>

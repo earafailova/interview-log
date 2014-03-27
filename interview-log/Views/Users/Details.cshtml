@@ -74,42 +74,10 @@
 
 <h2>Details</h2>
 <div class="alert alert-danger" id="alert" style="display:none"></div>
-<div>
-    <h4>User</h4>
-	<hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UserName)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.UserName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Position)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Position)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Tags)
-        </dt>
-        <dd>
-            @foreach (var tag in Model.Tags)
-            {
-                <span class="label label-default" title="@tag.Info">@tag.Name</span>
-            }
-        </dd>
-
-    </dl>
-</div>
+<p>
+    @Html.Partial("~/Views/Users/_Details.cshtml", Model)
+</p>
 
 
 <div id="tag" style="display:none">
@@ -128,90 +96,12 @@
     @Html.ActionLink("Back to List", "Index")
 </p>
 
+<p>
+    @Html.Partial("~/Views/Users/_Attachments.cshtml", Model)
+</p>
 
 
-<h3>Images:</h3>
-@{
-    int i = 0;
-    List<interview_log.Models.Attachment> images = Model.Images().ToList();
-    int imagesQuantity = images.Count;
-}
-<table border="1">
-    @foreach (var image in images)
-    {
-
-        <td>
-            <a href="javascript:showLarge('@i', @imagesQuantity)"><img src="~/uploads/images/@Model.Id/@image.Name" width="100" id="@i" title="click to enlarge" /></a>
-            <a href="javascript:smallAll(@imagesQuantity)"><img src="~/uploads/images/@Model.Id/@image.Name" width="500" id="@i-large" style="display:none" title="click to make it small again" /></a>
-            @Html.ActionLink("delete!", "DeleteAttachment/" + image.Id)
-        </td>
-        i++;
-    }
-</table>
-<div class="breadcrumb">
-    <h3>files:</h3>
-    <div class="row">
-        @foreach (var file in Model.Files())
-        {
-            <div class="col-md-4">
-                <p>
-                    @file.Name <br />
-                    @file.Size <br />
-                    downloaded <span id="@file.Id-dl-count">@file.DownloadsCount</span> times <br />
-                    @Html.ActionLink("delete!", "DeleteAttachment/" + file.Id)
-                </p>
-                <p><a class="btn btn-danger" href="~/uploads/files/@Model.Id/@file.Name" onclick="ajaxIncDlCounter('@file.Id')">Get it! &raquo;</a></p>
-            </div>
-        }
-    </div>
-
-    <form action="" method="post" enctype="multipart/form-data">
-
-        <label for="file"></label>
-        <input type="file" name="file" id="file" />
-
-        <input type="submit" onclick="return validateFile(file)" />
-    </form>
-
-</div>
-
-@if (!Model.Comments.Any())
-{
-        <div class="well">
-            <b>No comments! Be first!</b>
-        </div>
-    <br />
-}
-else
-{
-    <b>Comments:</b>
-}
-
-@foreach (var comment in Model.Comments)
-{
-    <div class="well">
-        @Html.ActionLink(comment.Author, "Details/" + comment.AuthorId)
-        @comment.Date
-        @Html.ActionLink("delete!", "DeleteComment/" + comment.Id)
-        <br />
-        @comment.Text
-    </div>
-}
-
-<div class="form-horizontal">
-
-    <div class="form-group">
-        @using (Html.BeginForm(actionName: "LeaveComment", controllerName: "Users"))
-        {
-            <b>leave a comment:</b>
-            <br />
-            <textarea name="text" id="text"></textarea>
-            @Html.HiddenFor(recipient => Model.Id)
-            <input type="submit" value="go!" class="btn btn-success" onclick="return validateComment(text)" />
-        }
-
-    </div>
-</div>
+@Html.Partial("~/Views/Users/_Comments.cshtml", Model)
 
 <div class="form-horizontal">
 
