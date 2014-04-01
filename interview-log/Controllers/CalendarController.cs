@@ -35,8 +35,23 @@ namespace interview_log.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string address)
+        public ActionResult Index(string state = "")
         {
+            switch(state)
+            {
+                case "error" :
+                    {
+                        
+                    }
+                    break;
+                case "succeess":
+                    {
+                        this.Flash("success", "Interview has been created");
+                    }
+                    break;
+                default:
+                    break;
+            }
             return View();
         }
 
@@ -110,11 +125,15 @@ namespace interview_log.Controllers
             
             Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp.AuthResult AuthResult = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).
              AuthorizeAsync(cancellationToken);
+            if (Session["interviewer"] == null)
+            {
+              Session["interviewer"] = interviewer;
+              Session["interviewee"] = interviewee;
+              Session["time"] = time;
+            }
             if (AuthResult.Credential == null)
             {
-                Session["interviewer"] = interviewer;
-                Session["interviewee"] = interviewee;
-                Session["time"] = time;
+                
                 return new RedirectResult(AuthResult.RedirectUri, true);
             }
             CalendarService service = new CalendarService(new BaseClientService.Initializer
@@ -132,11 +151,13 @@ namespace interview_log.Controllers
                 return RedirectToAction("Index", "Calendar");
             }
             if (CreateInterview((DateTime)Session["time"], service, (string)Session["interviewer"], (string)Session["interviewee"]))
+            {
                 this.Flash("success", "Interview has been created");
-            else
-                this.Flash("error", "Something has gone wrong. Interview has not been created");
-           return RedirectToAction("Index","Calendar");
-       }
+                return RedirectToAction("Index", "Calendar");
+            }
+            this.Flash("error", "Something has gone wrong. Interview has not been created");
+            return RedirectToAction("Index","Calendar");
+            }
 
         private bool CreateInterview(DateTime timeStart, CalendarService service, string interviewer, string interviewee)
         {
@@ -194,7 +215,7 @@ namespace interview_log.Controllers
             {
                 var user = db.Users.FirstOrDefault(u => u.Email == email);
                 if (user == null)
-                    throw new UserDoesNotExistException("Some interviewers are not in the data base");
+                    throw new UserDoesNotExistException("Some interviewers are not in the database");
                 usersList.Add(user);
             }
             return usersList;

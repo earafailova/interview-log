@@ -110,4 +110,5 @@ Backup*/
 UpgradeLog*.XML
 
 interview_log/Migrations/
-interview_log/App_Data/
+App_Data/*.mdf
+App_Data/*.ldf
