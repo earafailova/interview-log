@@ -81,12 +81,17 @@ namespace interview_log.Controllers
             user.Comments.Add(new Comment(author: userId, text: text));
             db.SaveChanges(); 
 
-            return RedirectToAction("Details");
+            return RedirectToAction("Details/" + Id);
         }
 
-        public ActionResult DeleteComment(System.Guid Id)
+        [ValidateInput(false)]
+        public ActionResult DeleteComment(System.Guid Id, string userId, string authorId)
         {
-            string userId = GetCurrentUserId();
+            string currenUserId = GetCurrentUserId();
+            
+            if (authorId != currenUserId && !db.Users.Find(currenUserId).Admin)
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+
             User user = db.Users.Find(userId);
             if (user == null)
                 return HttpNotFound();
@@ -96,7 +101,7 @@ namespace interview_log.Controllers
             db.Comments.Remove(toDelete);
 
             db.SaveChanges();
-            return RedirectToAction("Details");
+            return RedirectToAction("Details/" + userId);
         }
 
         public ActionResult Tag(string tag, string info)
