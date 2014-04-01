@@ -229,9 +229,9 @@
     </Compile>
     <Compile Include="Helpers\EnumerationHelper.cs" />
     <Compile Include="Helpers\TagsConverter.cs" />
-    <Compile Include="Migrations\201403271052126_init.cs" />
-    <Compile Include="Migrations\201403271052126_init.Designer.cs">
-      <DependentUpon>201403271052126_init.cs</DependentUpon>
+    <Compile Include="Migrations\201404010418047_migrate.cs" />
+    <Compile Include="Migrations\201404010418047_migrate.Designer.cs">
+      <DependentUpon>201404010418047_migrate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -321,8 +321,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201403271052126_init.resx">
-      <DependentUpon>201403271052126_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201404010418047_migrate.resx">
+      <DependentUpon>201404010418047_migrate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
