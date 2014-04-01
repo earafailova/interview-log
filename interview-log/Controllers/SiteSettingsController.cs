@@ -23,10 +23,7 @@ namespace interview_log.Controllers
            
         }
 
-
-
-
-       [HttpGet]
+    
        public ActionResult WriteCSV()
        {
                 String path = System.Web.HttpContext.Current.Server.MapPath(@"~\CSV\db.csv");
@@ -87,16 +84,13 @@ namespace interview_log.Controllers
            return RedirectToAction("Index");
        }
         
-        
-        
-
-        private static void AddUserTags(Models.User user, String [] tags)
+       private static void AddUserTags(Models.User user, String [] tags)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             for (int i = 0; i < tags.Count() && tags[i] != ""; i ++ )
             {
                 string tagName  = tags[i];
-                var existingTag = db.Tags.First(t => t.Name == tagName);
+                var existingTag = db.Tags.FirstOrDefault(t => t.Name == tagName);
                 if (existingTag != null)
                    user.Tags.Add(existingTag); 
                 else

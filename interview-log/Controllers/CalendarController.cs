@@ -192,7 +192,7 @@ namespace interview_log.Controllers
             List<User> usersList = new List<User>();
             foreach (string email in users)
             {
-                var user = db.Users.First(u => u.Email == email);
+                var user = db.Users.FirstOrDefault(u => u.Email == email);
                 if (user == null)
                     throw new UserDoesNotExistException("Some interviewers are not in the data base");
                 usersList.Add(user);
