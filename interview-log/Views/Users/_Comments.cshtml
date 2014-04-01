@@ -17,7 +17,11 @@ else
     <div class="well">
         @Html.ActionLink(comment.Author, "Details/" + comment.AuthorId)
         @comment.Date
-        @Html.ActionLink("delete!", "DeleteComment/" + comment.Id)
+        @if (comment.AuthorId == ViewBag.CurrentUser) 
+        { 
+            string path = String.Format("../DeleteComment/?id={0}&userId={1}&authorId={2}", comment.Id, Model.Id, comment.AuthorId);
+            <a href="@path">delete!</a>
+        }
         <br />
         @comment.Text
     </div>
