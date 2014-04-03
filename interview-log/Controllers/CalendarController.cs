@@ -25,7 +25,7 @@ namespace interview_log.Controllers
 
     public class CalendarController : Controller
     {
-       public Calendar CurrentCalendar = new Calendar();
+        public Calendar CurrentCalendar = new Calendar();
         CancellationToken cancellationToken = new CancellationToken(false);
         ApplicationDbContext db = new ApplicationDbContext();
 
@@ -37,11 +37,11 @@ namespace interview_log.Controllers
         [HttpPost]
         public ActionResult Index(string state = "")
         {
-            switch(state)
+            switch (state)
             {
-                case "error" :
+                case "error":
                     {
-                        
+
                     }
                     break;
                 case "succeess":
@@ -55,7 +55,7 @@ namespace interview_log.Controllers
             return View();
         }
 
-        public async Task<ActionResult>  ChangeCalendarAddress(string newAddress)
+        public async Task<ActionResult> ChangeCalendarAddress(string newAddress)
         {
             Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp.AuthResult AuthResult = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).
               AuthorizeAsync(cancellationToken);
@@ -70,7 +70,7 @@ namespace interview_log.Controllers
             var calendar = from c in calendarList
                            where c.Id == newAddress
                            select c;
-            if (calendar.ToList<Google.Apis.Calendar.v3.Data.CalendarListEntry>().Count != 0 && CurrentCalendar.CalendarAddress != newAddress) 
+            if (calendar.ToList<Google.Apis.Calendar.v3.Data.CalendarListEntry>().Count != 0 && CurrentCalendar.CalendarAddress != newAddress)
             {
                 CurrentCalendar.CalendarAddress = newAddress;
                 GiveAccessToCalendar(interview_log.Models.User.AdminsWithoutMe(currentUserEmail()), service, "owner");
@@ -78,9 +78,9 @@ namespace interview_log.Controllers
                 return RedirectToAction("Index", "SiteSettings");
             }
             this.Flash("error", "Calendar address has not been changed");
-           
+
             return RedirectToAction("Index", "SiteSettings");
-           }
+        }
 
         private void GiveAccessToCalendar(User[] admins, CalendarService service, string role)
         {
@@ -88,10 +88,10 @@ namespace interview_log.Controllers
             newRule.Role = role;
             newRule.Scope = new AclRule.ScopeData();
             newRule.Scope.Type = "user";
-            foreach(User user in admins)
+            foreach (User user in admins)
             {
-              newRule.Scope.Value = user.Email;
-              service.Acl.Insert(newRule, CurrentCalendar.CalendarAddress).Execute();
+                newRule.Scope.Value = user.Email;
+                service.Acl.Insert(newRule, CurrentCalendar.CalendarAddress).Execute();
             }
         }
 
@@ -119,21 +119,19 @@ namespace interview_log.Controllers
             return currentUser.Email;
         }
 
-        
-      public async Task<ActionResult> CreateInterview(string interviewer, string interviewee, DateTime? time = null)
+
+        public async Task<ActionResult> CreateInterview(string interviewer, string interviewee, DateTime? time = null)
         {
-            
+
             Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp.AuthResult AuthResult = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).
              AuthorizeAsync(cancellationToken);
-            if (Session["interviewer"] == null)
+            if (Session["valid"] == null || !(bool)Session["valid"])
             {
-              Session["interviewer"] = interviewer;
-              Session["interviewee"] = interviewee;
-              Session["time"] = time;
+                SaveParametres(interviewer, interviewee, time, true);
             }
             if (AuthResult.Credential == null)
             {
-                
+
                 return new RedirectResult(AuthResult.RedirectUri, true);
             }
             CalendarService service = new CalendarService(new BaseClientService.Initializer
@@ -143,21 +141,36 @@ namespace interview_log.Controllers
             });
             try
             {
-                AddInterview((DateTime)Session["time"], (string)Session["interviewer"], (string)Session["interviewee"]);
-            }
-            catch(UserDoesNotExistException e)
-            {
-                this.Flash("error", e.Message);
+                try
+                {
+                    AddInterview((DateTime)Session["time"], (string)Session["interviewer"], (string)Session["interviewee"]);
+                }
+                catch (UserDoesNotExistException e)
+                {
+                    this.Flash("error", e.Message);
+                    return RedirectToAction("Index", "Calendar");
+                }
+                if (CreateInterview((DateTime)Session["time"], service, (string)Session["interviewer"], (string)Session["interviewee"]))
+                {
+                    this.Flash("success", "Interview has been created");
+                    return RedirectToAction("Index", "Calendar");
+                }
+                this.Flash("error", "Something has gone wrong. Interview has not been created");
                 return RedirectToAction("Index", "Calendar");
             }
-            if (CreateInterview((DateTime)Session["time"], service, (string)Session["interviewer"], (string)Session["interviewee"]))
+            finally
             {
-                this.Flash("success", "Interview has been created");
-                return RedirectToAction("Index", "Calendar");
+                SaveParametres(null, null, null, false);
             }
-            this.Flash("error", "Something has gone wrong. Interview has not been created");
-            return RedirectToAction("Index","Calendar");
-            }
+        }
+
+        private void SaveParametres(string interviewer, string interviewee, DateTime? time, Boolean valid)
+        {
+            Session["interviewer"] = interviewer;
+            Session["interviewee"] = interviewee;
+            Session["time"] = time;
+            Session["valid"] = valid;
+        }
 
         private bool CreateInterview(DateTime timeStart, CalendarService service, string interviewer, string interviewee)
         {
@@ -168,21 +181,21 @@ namespace interview_log.Controllers
             Event interview = new Event();
             interview.Start = new EventDateTime()
             {
-               DateTime = timeStart
+                DateTime = timeStart
             };
             interview.End = new EventDateTime()
             {
-              DateTime = timeEnd
+                DateTime = timeEnd
             };
             string intervieweeName = interview_log.Models.User.GetName(interviewee);
             interview.Location = "Omsk";
-            interview.Summary = "Interview " + intervieweeName; 
+            interview.Summary = "Interview " + intervieweeName;
             interview.Description = "Interview " + intervieweeName + " </br> Visit Profile!";
             try
             {
-               service.Events.Insert(interview, CurrentCalendar.CalendarAddress).Execute();
+                service.Events.Insert(interview, CurrentCalendar.CalendarAddress).Execute();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -220,5 +233,5 @@ namespace interview_log.Controllers
             }
             return usersList;
         }
-   }
+    }
 }

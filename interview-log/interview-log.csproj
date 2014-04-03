@@ -313,6 +313,7 @@
     <Content Include="Views\Users\_Details.cshtml" />
     <Content Include="Views\Users\_Attachments.cshtml" />
     <Content Include="Views\Users\_Comments.cshtml" />
+    <Content Include="Views\Users\Interviewers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

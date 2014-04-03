@@ -89,6 +89,12 @@ namespace interview_log.Models
             return null;
         }
 
+        public static User[] Interviewers()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            return db.Users.Where<User>(user => user.Interviewer == true).ToArray<User>();
+        }
+
        
       
     }

@@ -19,6 +19,11 @@ namespace interview_log.Controllers
             return View(db.Users.ToList());
         }
 
+        public ActionResult Interviewers()
+        {
+            return View();
+        }
+
         [HttpPost]
         public ActionResult Index(string q, DateTime? from, DateTime? to)
         {
