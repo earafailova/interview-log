@@ -6,13 +6,13 @@ using interview_log.Models;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Text.RegularExpressions;
+using Microsoft.Owin.Security;
 namespace interview_log.Controllers
 {
     public class UsersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         delegate bool del(string query, string thing);
-
         // GET: /Users/
         public ActionResult Index()
         {
@@ -197,8 +197,37 @@ namespace interview_log.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             User user = db.Users.Find(id);
+
+
+            // we cannot modify list / collection inside foreach loop
+            foreach (Comment comment in user.Comments.ToList())
+            {
+                user.Comments.Remove(comment);
+                db.Comments.Remove(comment);
+            }
+            foreach (Attachment attachment in user.Attachments.ToList())
+            {
+                user.Attachments.Remove(attachment);
+                db.Attachments.Remove(attachment);
+
+                attachment.Delete();
+            }
+
+            foreach (Tag tag in user.Tags.ToList())
+            {
+                user.Tags.Remove(tag);
+            }
+            string current = GetCurrentUserId();
+
             db.Users.Remove(user);
             db.SaveChanges();
+
+            if (id == current)
+            {
+                HttpContext.GetOwinContext().Authentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
+
             return RedirectToAction("Index");
         }
 

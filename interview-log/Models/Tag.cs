@@ -10,13 +10,19 @@ namespace interview_log.Models
     public class Tag
     {
         public Tag() { }
-        public Tag(string name, string info = "superman in all branches of IT")
+        public Tag(string name, string info = "")
         {
+            if(info == "")
+            {
+                info = "Info on this tag wasn't supplied";
+            }
             Name = name;
             Info = info;
         }
         [Key] 
         public string Name { get; set; }
         public string Info { get; set; }
+
+        public virtual ICollection<User> Users { get; set; }
     }
 }
