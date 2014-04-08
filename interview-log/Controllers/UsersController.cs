@@ -203,7 +203,10 @@ namespace interview_log.Controllers
         {
             User user = db.Users.Find(id);
 
-
+            if (!db.Users.Find(GetCurrentUserId()).Admin)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             // we cannot modify list / collection inside foreach loop
             foreach (Comment comment in user.Comments.ToList())
             {

@@ -19,7 +19,7 @@ else
         @comment.Date
         @if (comment.AuthorId == ViewBag.CurrentUser) 
         { 
-            string path = String.Format("../DeleteComment/?id={0}&userId={1}&authorId={2}", comment.Id, Model.Id, comment.AuthorId);
+            string path = String.Format("/Users/DeleteComment/?id={0}&userId={1}&authorId={2}", comment.Id, Model.Id, comment.AuthorId);
             <a href="@path">delete!</a>
         }
         <br />
