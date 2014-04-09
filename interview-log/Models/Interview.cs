@@ -13,15 +13,15 @@ namespace interview_log.Models
         {
             Users = new HashSet<User>();
         }
-        public Interview(DateTime date)
+        public Interview(DateTime date, string eventId)
         {
             Date = date;
-            Id = Guid.NewGuid();
+            Id = eventId;
             Users = new HashSet<User>();
         }
 
         [Key]
-        public Guid Id { get; private set; }
+        public string Id { get; private set; }
         public DateTime Date { get; set; }
 
         public virtual ICollection<User> Users { get; set; }

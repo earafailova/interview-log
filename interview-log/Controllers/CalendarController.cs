@@ -61,6 +61,7 @@ namespace interview_log.Controllers
               AuthorizeAsync(cancellationToken);
             if (AuthResult.Credential == null)
                 return new RedirectResult(AuthResult.RedirectUri);
+           
             CalendarService service = new CalendarService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = AuthResult.Credential,
@@ -141,24 +142,25 @@ namespace interview_log.Controllers
             });
             try
             {
+                string eventId = CreateInterview((DateTime)Session["time"], service, (string)Session["interviewer"], (string)Session["interviewee"]);
+                if (eventId == null)
+                {
+                    this.Flash("error", "Something has gone wrong. Interview has not been created");
+                    return RedirectToAction("Index", "Calendar");
+                }
                 try
                 {
-                    AddInterview((DateTime)Session["time"], (string)Session["interviewer"], (string)Session["interviewee"]);
+                   AddInterview((DateTime)Session["time"], (string)Session["interviewer"], (string)Session["interviewee"], eventId);
                 }
                 catch (UserDoesNotExistException e)
                 {
                     this.Flash("error", e.Message);
                     return RedirectToAction("Index", "Calendar");
                 }
-                if (CreateInterview((DateTime)Session["time"], service, (string)Session["interviewer"], (string)Session["interviewee"]))
-                {
-                    this.Flash("success", "Interview has been created");
-                    return RedirectToAction("Index", "Calendar");
-                }
-                this.Flash("error", "Something has gone wrong. Interview has not been created");
+                this.Flash("success", "Interview has been created");
                 return RedirectToAction("Index", "Calendar");
-            }
-            finally
+             }
+             finally
             {
                 SaveParametres(null, null, null, false);
             }
@@ -172,7 +174,7 @@ namespace interview_log.Controllers
             Session["valid"] = valid;
         }
 
-        private bool CreateInterview(DateTime timeStart, CalendarService service, string interviewer, string interviewee)
+        private string CreateInterview(DateTime timeStart, CalendarService service, string interviewer, string interviewee)
         {
             DateTime timeEnd = timeStart + TimeSpan.FromMinutes(30);
             var curTZone = TimeZone.CurrentTimeZone;
@@ -193,16 +195,16 @@ namespace interview_log.Controllers
             interview.Description = "Interview " + intervieweeName + " </br> Visit Profile!";
             try
             {
-                service.Events.Insert(interview, CurrentCalendar.CalendarAddress).Execute();
+                return service.Events.Insert(interview, CurrentCalendar.CalendarAddress).Execute().Id;
+                
             }
             catch (Exception)
             {
-                return false;
+                return null;
             }
-            return true;
         }
 
-        public void AddInterview(DateTime dateTime, string interviewee, string interviewer)
+        public Interview AddInterview(DateTime dateTime, string interviewee, string interviewer, string eventId)
         {
             string[] splitResult = interviewer.Split(new[] { ',' });
             int length = splitResult.Length;
@@ -210,7 +212,7 @@ namespace interview_log.Controllers
             splitResult.CopyTo(users, 0);
             new string[] { interviewee }.CopyTo(users, length);
             List<User> foundUsers = FindInterviewersAndInterviewee(users);
-            Interview interview = new Interview(dateTime);
+            Interview interview = new Interview(dateTime, eventId);
             foreach (User user in foundUsers)
             {
                 user.Interviews.Add(interview);
@@ -219,6 +221,22 @@ namespace interview_log.Controllers
             }
             foundUsers.Last().Interviewer = false;
             db.SaveChanges();
+            return interview;
+        }
+
+        public async Task<ActionResult> DeleteInterview(string eventId)
+        {
+            Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp.AuthResult AuthResult = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).
+              AuthorizeAsync(cancellationToken);
+            if (AuthResult.Credential == null)
+                return new RedirectResult(AuthResult.RedirectUri);
+            CalendarService service = new CalendarService(new BaseClientService.Initializer
+            {
+                HttpClientInitializer = AuthResult.Credential,
+                ApplicationName = "Interview Log"
+            });
+            service.Events.Delete(CurrentCalendar.CalendarAddress, eventId);
+           return RedirectToAction("Index", "Interviews");
         }
 
         public List<User> FindInterviewersAndInterviewee(string[] users)
