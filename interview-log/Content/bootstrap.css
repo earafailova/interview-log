@@ -211,12 +211,13 @@ input[type="search"]::-webkit-search-decoration {
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   padding: 0;
-  border: 0;
+  border: solid;
 }
 
 textarea {
   overflow: auto;
   vertical-align: top;
+  resize: none;
 }
 
 table {
@@ -315,7 +316,11 @@ body {
   font-size: 14px;
   line-height: 1.428571429;
   color: #333333;
-  background-color: #ffffff;
+  text-shadow: 2px 2px 10px #119fbf;
+  background-size:   contain;                      /* <------ */
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-image: url(/data/cat.png);
 }
 
 input,

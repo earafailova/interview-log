@@ -202,7 +202,6 @@ namespace interview_log.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             User user = db.Users.Find(id);
-
             if (!db.Users.Find(GetCurrentUserId()).Admin)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
