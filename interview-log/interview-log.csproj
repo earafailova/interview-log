@@ -77,6 +77,9 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Mail">
+      <HintPath>..\packages\Mail.dll.3.0.14060.1522\lib\Mail.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -221,6 +224,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InterviewsController.cs" />
     <Compile Include="Controllers\SiteSettingsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Exceptions\UserDoesNotExistException.cs" />
@@ -229,13 +233,13 @@
     </Compile>
     <Compile Include="Helpers\EnumerationHelper.cs" />
     <Compile Include="Helpers\TagsConverter.cs" />
-    <Compile Include="Migrations\201404010418047_migrate.cs" />
-    <Compile Include="Migrations\201404010418047_migrate.Designer.cs">
-      <DependentUpon>201404010418047_migrate.cs</DependentUpon>
+    <Compile Include="Migrations\201404090738001_pull.cs" />
+    <Compile Include="Migrations\201404090738001_pull.Designer.cs">
+      <DependentUpon>201404090738001_pull.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201404030624103_improved tags model.cs" />
-    <Compile Include="Migrations\201404030624103_improved tags model.Designer.cs">
-      <DependentUpon>201404030624103_improved tags model.cs</DependentUpon>
+    <Compile Include="Migrations\201404090929561_migration.cs" />
+    <Compile Include="Migrations\201404090929561_migration.Designer.cs">
+      <DependentUpon>201404090929561_migration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -314,6 +318,7 @@
     <Content Include="Views\Users\_Attachments.cshtml" />
     <Content Include="Views\Users\_Comments.cshtml" />
     <Content Include="Views\Users\Interviewers.cshtml" />
+    <Content Include="Views\Interviews\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -327,11 +332,11 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201404010418047_migrate.resx">
-      <DependentUpon>201404010418047_migrate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201404090738001_pull.resx">
+      <DependentUpon>201404090738001_pull.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201404030624103_improved tags model.resx">
-      <DependentUpon>201404030624103_improved tags model.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201404090929561_migration.resx">
+      <DependentUpon>201404090929561_migration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

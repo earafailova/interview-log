@@ -75,7 +75,7 @@ namespace interview_log.Controllers
             }
             catch(Exception)
             {
-                reader.Close();
+                if (reader != null) reader.Close();
                 this.Flash("error", "Something has gone wrong. DataBase is not changed");
                 return RedirectToAction("Index");
             }
