@@ -20,6 +20,13 @@ namespace interview_log.Models
             Users = new HashSet<User>();
         }
 
+        public static IQueryable<User> Between(DateTime? first, DateTime? second)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var byTime = db.Interviews.Where(interview => interview.Date > first && interview.Date < second).SelectMany(t => t.Users);
+            return byTime;
+        }
+
         [Key]
         public string Id { get; private set; }
         public DateTime Date { get; set; }

@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Text;
 using LINQtoCSV;
 using interview_log.Exceptions;
+using System;
 
 namespace interview_log.Models
 {
@@ -57,7 +58,7 @@ namespace interview_log.Models
             return System.Array.FindAll<User>(admins, user => user.Email != myEmail);
         }
         
-        public static User[] Search(string q)
+        public static User[] Search(string q, DateTime? first, DateTime? second)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Regex query = new Regex(Regex.Escape(q.ToLower()));
@@ -76,9 +77,11 @@ namespace interview_log.Models
             var byTag = db.Users.ToList().
                 Where(user => user.Tags.
                     Any(tag => query.IsMatch(tag.Name.ToLower())));
+            var byTime = Interview.Between(first, second);
 
-            return byTag.Union(byUser).ToArray();  
+            return byTag.Union(byUser).Union(byTime).ToArray();  
         }
+
 
        
         internal static string GetName(string interviewer)

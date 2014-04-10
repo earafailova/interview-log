@@ -19,16 +19,16 @@ namespace interview_log.Controllers
             return View(db.Users.ToList());
         }
 
-        public ActionResult Interviewers()
-        {
-            return View();
-        }
-
         [HttpPost]
         public ActionResult Index(string q, DateTime? from, DateTime? to)
         {
-            var response = interview_log.Models.User.Search(q);
+            var response = interview_log.Models.User.Search(q, from, to);
             return View(response);
+        }
+
+        public ActionResult Interviewers()
+        {
+            return View();
         }
 
         // GET: /Users/Details/5
