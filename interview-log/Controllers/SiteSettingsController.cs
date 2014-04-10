@@ -15,6 +15,7 @@ namespace interview_log.Controllers
     public class SiteSettingsController : Controller
     {
         private Calendar CurrentCalendar;
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public ActionResult Index()
         {
@@ -55,7 +56,7 @@ namespace interview_log.Controllers
             {
                 file.SaveAs(fileName);
                 reader = new StreamReader(fileName);
-                ApplicationDbContext db = new ApplicationDbContext();
+               
                 var csv = new CsvReader(reader);
                 while (csv.Read())
                 {
@@ -84,9 +85,8 @@ namespace interview_log.Controllers
            return RedirectToAction("Index");
        }
         
-       private static void AddUserTags(Models.User user, String [] tags)
+       private  void AddUserTags(Models.User user, String [] tags)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
             for (int i = 0; i < tags.Count() && tags[i] != ""; i ++ )
             {
                 string tagName  = tags[i];

@@ -109,11 +109,10 @@
         @using (Html.BeginForm(actionName: "CreateInterview", controllerName: "Calendar"))
         {
             <b>create an interview:</b>
-            <br />
+            <br/>
             <input name="interviewer" placeholder="interviewer" />
             <input name="interviewee" value="@Model.Email" style="display:none" />
             <input type="datetime-local" name="time"/>
-            
             <input type="submit" value="go!" class="btn btn-success" onclick="return validateInterview(interviewer) && validateDateTime(time)" />
         }
 
