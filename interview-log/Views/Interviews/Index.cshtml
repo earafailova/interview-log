@@ -1,0 +1,78 @@
+﻿@model IEnumerable<interview_log.Models.Interview>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Interviews</h2>
+   <script type="text/javascript">
+
+   function hideEditInterviewForm(id) {
+        document.getElementById(id).style.display = "none";
+        document.getElementById('interview_link' + id).style.display = "";
+    }
+    function showEditInterviewForm(id) {
+        document.getElementById(id).style.display = "";
+       document.getElementById('interview_link' + id).style.display = "none";
+    }
+    </script>
+
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Interviewee</th>
+                <th>Interviewers</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+            int i = 1;
+            foreach (var item in Model) {
+        <tr>
+                <td>@i</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Users.FirstOrDefault( user => !user.Interviewer).Email)
+                </td>
+                <td>
+                    @{
+                var interviewers = item.Users.Where(user => user.Interviewer);
+                foreach(var interviewer  in interviewers )
+                {
+                  <li> @interviewer.Email</li>
+                 }
+                }
+
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteInterview", new { eventId = item.Id })
+                    <br />
+                    <a href="javascript:showEditInterviewForm('@i')" id="interview_link + @i" class="text-primary"> Edit Interview </a>
+                       <div id=@i style="display:none">
+                            @using (Html.BeginForm(actionName: "EditInterview", controllerName: "Interviews"))
+                            {
+                                <b>edit interview:</b>
+                                <br />
+                                <input name="interviewers" placeholder="interviewers" />
+                                <input name="eventId" value="@item.Id" style="display:none" />
+                                <input type="datetime-local" name="date" />
+                                <input type="submit" value="Edit" class="btn btn-success" onclick="return validateInterview(interviewer) && validateDateTime(time)" />
+                            }
+                       </div>
+             </td>
+
+             </tr>
+                i++;
+            }
+        }
+        </tbody>
+
+       
+
+    </table>
+
+

@@ -233,13 +233,9 @@
     </Compile>
     <Compile Include="Helpers\EnumerationHelper.cs" />
     <Compile Include="Helpers\TagsConverter.cs" />
-    <Compile Include="Migrations\201404090738001_pull.cs" />
-    <Compile Include="Migrations\201404090738001_pull.Designer.cs">
-      <DependentUpon>201404090738001_pull.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201404090929561_migration.cs" />
-    <Compile Include="Migrations\201404090929561_migration.Designer.cs">
-      <DependentUpon>201404090929561_migration.cs</DependentUpon>
+    <Compile Include="Migrations\201404100531143_migration.cs" />
+    <Compile Include="Migrations\201404100531143_migration.Designer.cs">
+      <DependentUpon>201404100531143_migration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -332,11 +328,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201404090738001_pull.resx">
-      <DependentUpon>201404090738001_pull.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201404090929561_migration.resx">
-      <DependentUpon>201404090929561_migration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201404100531143_migration.resx">
+      <DependentUpon>201404100531143_migration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

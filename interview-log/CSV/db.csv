@@ -1,2 +1,8 @@
 Id,UserName,Email,State,Position,Tags
-fd02e94c-501f-4d2c-ba68-197a7a59e7ee,EkaterinaArafailova,earafailova@gmail.com,0,,
+382b9eef-5674-4972-98f8-645fa9fd1944,TyomaBug,buggy@bug.com,1,bug,"C,C++,"
+63445b26-6172-4e22-a51f-65525cc70f09,TyoBug,bug@bug.com,1,bug,"C,C++,"
+6c55c2d1-f8a4-4db4-a6c0-8e42b807eff5,TyomBug,bugg@bug.com,1,bug,"C,C++,"
+862c04be-41d9-4eb6-b8bd-87b5511be128,TBug,bggy@bug.com,1,bug,"C,C++,"
+9476f4bb-b456-4e40-8665-cf9e82658564,TyBug,buy@bug.com,1,bug,"C,C++,"
+e75e09fa-6ac3-421b-a588-7300370070e6,EkaterinaArafailova,earafailova@gmail.com,0,,
+eeb7128e-4b0e-4bf1-b90b-1583c461db90,TyomaBugov,bugy@bug.com,1,bug,"C,C++,"

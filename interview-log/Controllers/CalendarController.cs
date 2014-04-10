@@ -142,21 +142,23 @@ namespace interview_log.Controllers
             });
             try
             {
-                string eventId = CreateInterview((DateTime)Session["time"], service, (string)Session["interviewer"], (string)Session["interviewee"]);
-                if (eventId == null)
-                {
-                    this.Flash("error", "Something has gone wrong. Interview has not been created");
-                    return RedirectToAction("Index", "Calendar");
-                }
+                List<User> users = null;
                 try
                 {
-                   AddInterview((DateTime)Session["time"], (string)Session["interviewer"], (string)Session["interviewee"], eventId);
+                    users = FindInterviewersAndInterviewee((string)Session["interviewer"], (string)Session["interviewee"]);
                 }
                 catch (UserDoesNotExistException e)
                 {
                     this.Flash("error", e.Message);
                     return RedirectToAction("Index", "Calendar");
                 }
+                string eventId = CreateInterview((DateTime)Session["time"], service, (string)Session["interviewer"], (string)Session["interviewee"]);
+                if (eventId == null)
+                {
+                    this.Flash("error", "Something has gone wrong. Interview has not been created");
+                    return RedirectToAction("Index", "Calendar");
+                }
+                AddInterview((DateTime)Session["time"],eventId, users);
                 this.Flash("success", "Interview has been created");
                 return RedirectToAction("Index", "Calendar");
              }
@@ -176,19 +178,8 @@ namespace interview_log.Controllers
 
         private string CreateInterview(DateTime timeStart, CalendarService service, string interviewer, string interviewee)
         {
-            DateTime timeEnd = timeStart + TimeSpan.FromMinutes(30);
-            var curTZone = TimeZone.CurrentTimeZone;
-            var dateStart = new DateTimeOffset(timeStart, curTZone.GetUtcOffset(timeStart));
-            var dateEnd = new DateTimeOffset(timeEnd, curTZone.GetUtcOffset(timeEnd));
             Event interview = new Event();
-            interview.Start = new EventDateTime()
-            {
-                DateTime = timeStart
-            };
-            interview.End = new EventDateTime()
-            {
-                DateTime = timeEnd
-            };
+            SetInterviewTime(timeStart, interview);
             string intervieweeName = interview_log.Models.User.GetName(interviewee);
             interview.Location = "Omsk";
             interview.Summary = "Interview " + intervieweeName;
@@ -204,22 +195,32 @@ namespace interview_log.Controllers
             }
         }
 
-        public Interview AddInterview(DateTime dateTime, string interviewee, string interviewer, string eventId)
+         private static void SetInterviewTime(DateTime timeStart, Event interview)
         {
-            string[] splitResult = interviewer.Split(new[] { ',' });
-            int length = splitResult.Length;
-            string[] users = new string[length + 1];
-            splitResult.CopyTo(users, 0);
-            new string[] { interviewee }.CopyTo(users, length);
-            List<User> foundUsers = FindInterviewersAndInterviewee(users);
+            DateTime timeEnd = timeStart + TimeSpan.FromMinutes(30);
+            var curTZone = TimeZone.CurrentTimeZone;
+            var dateStart = new DateTimeOffset(timeStart, curTZone.GetUtcOffset(timeStart));
+            var dateEnd = new DateTimeOffset(timeEnd, curTZone.GetUtcOffset(timeEnd));
+            interview.Start = new EventDateTime()
+            {
+                DateTime = timeStart
+            };
+            interview.End = new EventDateTime()
+            {
+                DateTime = timeEnd
+            };
+         }
+
+        public Interview AddInterview(DateTime dateTime, string eventId, List<User> users)
+        {
             Interview interview = new Interview(dateTime, eventId);
-            foreach (User user in foundUsers)
+            foreach (User user in users)
             {
                 user.Interviews.Add(interview);
                 user.Interviewer = true;
                 interview.Users.Add(user);
             }
-            foundUsers.Last().Interviewer = false;
+            users.Last().Interviewer = false;
             db.SaveChanges();
             return interview;
         }
@@ -235,12 +236,17 @@ namespace interview_log.Controllers
                 HttpClientInitializer = AuthResult.Credential,
                 ApplicationName = "Interview Log"
             });
-            service.Events.Delete(CurrentCalendar.CalendarAddress, eventId);
+            service.Events.Delete(CurrentCalendar.CalendarAddress, eventId).Execute();
            return RedirectToAction("Index", "Interviews");
         }
 
-        public List<User> FindInterviewersAndInterviewee(string[] users)
+        public List<User> FindInterviewersAndInterviewee(string interviewer, string interviewee)
         {
+            string[] splitResult = interviewer.Split(new[] { ',' });
+            int length = splitResult.Length;
+            string[] users = new string[length + 1];
+            splitResult.CopyTo(users, 0);
+            new string[] { interviewee }.CopyTo(users, length);
             List<User> usersList = new List<User>();
             foreach (string email in users)
             {
@@ -250,6 +256,23 @@ namespace interview_log.Controllers
                 usersList.Add(user);
             }
             return usersList;
+        }
+
+        public async Task<ActionResult> EditInterview(string eventId, DateTime date)
+        {
+            Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp.AuthResult AuthResult = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).
+              AuthorizeAsync(cancellationToken);
+            if (AuthResult.Credential == null)
+                return new RedirectResult(AuthResult.RedirectUri);
+            CalendarService service = new CalendarService(new BaseClientService.Initializer
+            {
+                HttpClientInitializer = AuthResult.Credential,
+                ApplicationName = "Interview Log"
+            });
+            Event interview = service.Events.Get(CurrentCalendar.CalendarAddress, eventId).Execute();
+            SetInterviewTime(date, interview);
+            service.Events.Update(interview, CurrentCalendar.CalendarAddress, eventId).Execute();
+            return RedirectToAction("Index","Interviews");
         }
     }
 }
