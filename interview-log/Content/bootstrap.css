@@ -5029,10 +5029,13 @@ a.thumbnail:focus {
 }
 
 .alert {
+  position: fixed;
   padding: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;
   border-radius: 4px;
+  right: 0;
+  bottom: 0;
 }
 
 .alert h4 {
@@ -5107,8 +5110,8 @@ a.thumbnail:focus {
 }
 
 .alert-danger {
-  color: #b94a48;
-  background-color: #f2dede;
+  color: #f9faf8;
+  background-color: #ff5e5e;
   border-color: #eed3d7;
 }
 
@@ -5635,6 +5638,10 @@ button.close {
   background: transparent;
   border: 0;
   -webkit-appearance: none;
+}
+
+iframe {
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
 }
 
 .modal-open {

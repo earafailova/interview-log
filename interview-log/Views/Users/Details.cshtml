@@ -62,6 +62,12 @@
         doc.style.display = "";
         return false;
     }
+
+    function hideAlert() {
+        var doc = document.getElementById('alert');
+        doc.style.display = "none";
+        return false;
+    }
         
     function ajaxIncDlCounter(fileId) {
         var xmlhttp = new XMLHttpRequest();
@@ -73,7 +79,6 @@
 </script>
 
 <h2>Details</h2>
-<div class="alert alert-danger" id="alert" style="display:none"></div>
 
 <p>
     @Html.Partial("~/Views/Users/_Details.cshtml", Model)
