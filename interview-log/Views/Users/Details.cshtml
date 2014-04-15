@@ -86,10 +86,10 @@
         <b>Tag it:</b>
         <input type="text" name="tag" id="text" placeholder="Tag"/>
         <input type="text" name="info" id="info" placeholder="Description"/>
-        <input type="submit" value="Okay!" class="btn btn-success" onclick="hideTagForm(); return validateTag(tag)" />
+        <input type="submit" value="Okay!" class="btn btn-dark" onclick="hideTagForm(); return validateTag(tag)" />
     }
 </div>
-<a href="javascript:showTagForm()" id="tag_button" class="btn btn-success btn-small"><i class="icon-white icon-ok-circle"></i> Tag it!</a>
+<a href="javascript:showTagForm()" id="tag_button" class="btn btn-dark btn-small"><i class="glyphicon glyphicon-ok"></i> Tag it!</a>
 
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
@@ -113,7 +113,7 @@
             <input name="interviewer" placeholder="interviewer" />
             <input name="interviewee" value="@Model.Email" style="display:none" />
             <input type="datetime-local" name="time"/>
-            <input type="submit" value="go!" class="btn btn-success" onclick="return validateInterview(interviewer) && validateDateTime(time)" />
+            <input type="submit" value="Create interview!" class="btn btn-dark" onclick="return validateInterview(interviewer) && validateDateTime(time)" />
         }
 
     </div>

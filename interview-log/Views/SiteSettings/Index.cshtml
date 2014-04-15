@@ -13,7 +13,7 @@
             Calendar Address <br /> <br />
             <input type="text" id="newAddress" name="newAddress"/>
             <br/> <br />
-            <input type="submit" value="Save" class="btn btn-default" />
+            <input type="submit" value="Save" class="btn btn-dark" />
     </div>
 
 }
@@ -30,7 +30,7 @@ Administrators: <br/>
 <br/>
 @using (Html.BeginForm("WriteCSV", "SiteSettings"))
 {
-    <input type="submit" value="Export CSV" class="btn btn-default"/>
+    <input type="submit" value="Export CSV" class="btn btn-dark"/>
 }
 
 <br />
@@ -40,5 +40,5 @@ Administrators: <br/>
     <label for="file"></label>
     <input type="file" name="file" id="file" />
 
-    <input type="submit" value="Import CSV" class="btn btn-default" />
+    <input type="submit" value="Import CSV" class="btn btn-dark" />
 </form>

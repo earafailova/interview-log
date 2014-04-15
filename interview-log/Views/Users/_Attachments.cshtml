@@ -10,9 +10,9 @@
     {
 
         <td>
-            <a href="javascript:showLarge('@i', @imagesQuantity)"><img src="~/uploads/images/@Model.Id/@image.Name" width="100" id="@i" title="click to enlarge" /></a>
+            <a href="javascript:showLarge('@i', @imagesQuantity)"><img src="~/uploads/images/@Model.Id/@image.Name" width="100" id="@i" title="click to enlarge"></a>
             <a href="javascript:smallAll(@imagesQuantity)"><img src="~/uploads/images/@Model.Id/@image.Name" width="500" id="@i-large" style="display:none" title="click to make it small again" /></a>
-            @Html.ActionLink("delete!", "DeleteAttachment/" + image.Id)
+            <a href="DeleteAttachment/@image.Id"><span class="glyphicon glyphicon-remove"></span></a>
         </td>
         i++;
     }
